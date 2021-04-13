@@ -6,6 +6,10 @@ build/
 !**/src/test/**/build/
 .DS_Store
 
+## Config
+src/main/resources/application.yaml
+docker-compose.override.yml
+
 ### STS ###
 .apt_generated
 .classpath
