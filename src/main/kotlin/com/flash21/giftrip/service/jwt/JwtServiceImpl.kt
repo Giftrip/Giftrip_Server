@@ -146,7 +146,6 @@ class JwtServiceImpl: JwtService {
             val exp: Date = claims.get("exp", Date::class.java)
 
             if (Date().time - exp.time <= DateConstant().MILLISECONDS_FOR_A_HOUR * 3) {
-                println("갱신")
                 newRefreshToken = createToken(user, JwtAuth.REFRESH)
             }
 

@@ -7,5 +7,6 @@ import java.util.*
 
 @Repository
 interface UserRepo: JpaRepository<User, Long> {
+    fun findByPhoneNumber(phoneNumber: String): Optional<User>
     fun findByPhoneNumberAndPw(phoneNumber: String, pw: String): Optional<User>
 }
