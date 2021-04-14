@@ -20,12 +20,19 @@ dependencies {
 	// 이거 없으면 시작하자마자 꺼짐
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.hibernate:hibernate-validator:6.1.5.Final")
-	implementation("io.springfox:springfox-swagger2:2.9.2")
-	implementation("io.springfox:springfox-swagger-ui:2.9.2")
 
-	implementation("io.jsonwebtoken:jjwt:0.5.1")
+	implementation("io.springfox:springfox-swagger2:2.9.2")
+	implementation("io.springfox:springfox-bean-validators:2.9.2")
+	implementation("io.springfox:springfox-swagger-ui:2.9.2")
+	implementation("org.bitbucket.tek-nik:spring-swagger-simplified:1.0.8")
+
+	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+	implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
+	implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+	implementation("org.modelmapper:modelmapper:2.1.1")
 
 	implementation("org.springframework.boot:spring-boot-configuration-processor")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
