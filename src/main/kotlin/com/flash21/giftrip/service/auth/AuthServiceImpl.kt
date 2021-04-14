@@ -1,13 +1,11 @@
 package com.flash21.giftrip.service.auth
 
-import com.flash21.giftrip.constant.DateConstant
-import com.flash21.giftrip.domain.dto.auth.ChangePwDTO
-import com.flash21.giftrip.domain.dto.auth.LoginDTO
-import com.flash21.giftrip.domain.dto.auth.PhoneCheckDTO
-import com.flash21.giftrip.domain.dto.auth.RegisterDTO
+import com.flash21.giftrip.domain.dto.auth.*
 import com.flash21.giftrip.domain.entity.PhoneAuth
+import com.flash21.giftrip.domain.entity.PhonePwAuth
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.repository.PhoneAuthRepo
+import com.flash21.giftrip.domain.repository.PhonePwAuthRepo
 import com.flash21.giftrip.domain.repository.UserRepo
 import com.flash21.giftrip.domain.ro.auth.TokenRO
 import com.flash21.giftrip.domain.ro.auth.AuthTokenModel
@@ -34,6 +32,9 @@ class AuthServiceImpl: AuthService {
     private lateinit var phoneAuthRepo: PhoneAuthRepo
 
     @Autowired
+    private lateinit var phonePwAuthRepo: PhonePwAuthRepo
+
+    @Autowired
     private lateinit var jwtService: JwtServiceImpl
 
     @Autowired
@@ -58,7 +59,7 @@ class AuthServiceImpl: AuthService {
     override fun getAuthCode(phoneNumber: String): PhoneAuth {
         userRepo.findByPhoneNumber(phoneNumber)
                 .ifPresent {
-                    throw HttpClientErrorException(HttpStatus.CONFLICT, "이미 가입된 전번.")
+                    throw HttpClientErrorException(HttpStatus.CONFLICT, "이미 가입된 전화번호.")
                 }
 
         val phoneAuth: PhoneAuth = phoneAuthRepo
@@ -70,41 +71,24 @@ class AuthServiceImpl: AuthService {
         }
 
         phoneAuth.phoneNumber = phoneNumber
-
-        if (!phoneAuth.reset(GenerateCode.execute())) {
-            throw HttpClientErrorException(HttpStatus.FORBIDDEN, "이미 인증됨.")
-        }
+        phoneAuth.reset(GenerateCode.execute())
 
         phoneAuthRepo.save(phoneAuth)
 
         return phoneAuth
     }
 
-    override fun checkAuthCode(phoneCheckDTO: PhoneCheckDTO) {
+    override fun register(registerDTO: RegisterDTO) {
         val phoneAuth: PhoneAuth = phoneAuthRepo
-                .findByPhoneNumberAndCode(phoneCheckDTO.phoneNumber, phoneCheckDTO.code)
+                .findByPhoneNumberAndCode(registerDTO.phoneNumber, registerDTO.code)
                 .orElseThrow {
                     throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "인증 정보 불일치.")
                 }
 
-        phoneAuth.isCertified = true
-        phoneAuth.code = null
-        phoneAuthRepo.save(phoneAuth)
-    }
-
-    override fun register(registerDTO: RegisterDTO) {
         userRepo.findByPhoneNumber(registerDTO.phoneNumber)
                 .ifPresent {
-                    throw HttpClientErrorException(HttpStatus.CONFLICT, "이미 가입된 전번.")
+                    throw HttpClientErrorException(HttpStatus.CONFLICT, "이미 가입된 전화번호.")
                 }
-
-        val phoneAuth: PhoneAuth = phoneAuthRepo
-                .findByPhoneNumber(registerDTO.phoneNumber)
-                .orElseThrow {
-                    throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "인증 정보 없음.")
-                }
-        if (!phoneAuth.isCertified) throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "인증 안됨.")
-
 
         val user: User = ModelMapper().map(registerDTO, User::class.java)
 
@@ -114,6 +98,46 @@ class AuthServiceImpl: AuthService {
 
     override fun changePw(changePwDTO: ChangePwDTO, user: User) {
         user.pw = changePwDTO.pw
+        userRepo.save(user)
+    }
+
+    override fun getPwAuthCode(phoneNumber: String): PhonePwAuth {
+        userRepo.findByPhoneNumber(phoneNumber)
+                .orElseThrow {
+                    throw HttpClientErrorException(HttpStatus.NOT_FOUND, "해당 전화번호 유저가 없음.")
+                }
+
+        val phonePwAuth: PhonePwAuth = phonePwAuthRepo
+                .findByPhoneNumber(phoneNumber)
+                .orElse(PhonePwAuth())
+
+        if (Date().before(phonePwAuth.retryAt)) {
+            throw HttpClientErrorException(HttpStatus.TOO_MANY_REQUESTS, "아직 발급 불가.")
+        }
+
+        phonePwAuth.phoneNumber = phoneNumber
+        phonePwAuth.reset(GenerateCode.execute())
+
+        phonePwAuthRepo.save(phonePwAuth)
+
+        return phonePwAuth
+    }
+
+    override fun changePwByCode(changePwByCodeDTO: ChangePwByCodeDTO) {
+        val phonePwAuth: PhonePwAuth = phonePwAuthRepo
+                .findByPhoneNumberAndCode(changePwByCodeDTO.phoneNumber, changePwByCodeDTO.code)
+                .orElseThrow {
+                    throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "인증 정보 불일치.")
+                }
+
+        val user: User = userRepo.findByPhoneNumber(changePwByCodeDTO.phoneNumber)
+                .orElseThrow {
+                    throw HttpClientErrorException(HttpStatus.NOT_FOUND, "해당 전화번호 유저 없음.")
+                }
+
+        user.pw = changePwByCodeDTO.pw
+
+        phonePwAuthRepo.delete(phonePwAuth)
         userRepo.save(user)
     }
 

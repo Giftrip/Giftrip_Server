@@ -6,7 +6,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class PhoneAuth {
+class PhonePwAuth {
 
     // 순서
     @Id
