@@ -10,6 +10,9 @@ build/
 src/main/resources/application.yaml
 docker-compose.override.yml
 
+static/*
+!static/.gitkeep
+
 ### STS ###
 .apt_generated
 .classpath

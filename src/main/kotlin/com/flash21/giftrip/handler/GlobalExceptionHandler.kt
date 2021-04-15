@@ -1,6 +1,7 @@
 package com.flash21.giftrip.handler
 
 import com.flash21.giftrip.domain.ro.http.Response
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
+import org.springframework.web.multipart.MultipartException
 
 @ControllerAdvice
 class GlobalExceptionHandler {
@@ -47,6 +49,18 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     protected fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<Response> {
+        val data = Response(HttpStatus.BAD_REQUEST, "검증 오류.")
+        return ResponseEntity<Response>(data, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(SizeLimitExceededException::class)
+    protected fun handleSizeLimitExceededException(e: SizeLimitExceededException): ResponseEntity<Response> {
+        val data = Response(HttpStatus.BAD_REQUEST, "너무 크기가 큼.")
+        return ResponseEntity(data, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(MultipartException::class)
+    protected fun handleMultipartException(e: MultipartException): ResponseEntity<Response> {
         val data = Response(HttpStatus.BAD_REQUEST, "검증 오류.")
         return ResponseEntity<Response>(data, HttpStatus.BAD_REQUEST)
     }

@@ -21,6 +21,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.hibernate:hibernate-validator:6.1.5.Final")
 
+	implementation("commons-io:commons-io:2.8.0")
+
 	implementation("io.springfox:springfox-swagger2:2.9.2")
 	implementation("io.springfox:springfox-bean-validators:2.9.2")
 	implementation("io.springfox:springfox-swagger-ui:2.9.2")
