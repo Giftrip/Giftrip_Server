@@ -35,11 +35,10 @@ class JwtAuthenticationFilter(private val handlerExceptionResolver: HandlerExcep
             // cors
             if (request.method != "OPTIONS") {
                 if (StringUtils.isEmpty(token)) {
-                    println(1)
                     throw HttpClientErrorException(HttpStatus.BAD_REQUEST, "검증 오류.")
                 }
 
-                val user: User? = jwtServiceImpl.validateToken(token)
+                val user: User = jwtServiceImpl.validateToken(token)
 
                 request.setAttribute("user", user)
             }
