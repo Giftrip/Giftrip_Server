@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import javax.servlet.http.HttpServletRequest
+import javax.validation.constraints.Size
 
 @RestController
 @RequestMapping("/auth")
@@ -59,7 +60,7 @@ class AuthController {
         ApiResponse(code = 409, message = "이미 가입된 전번."),
         ApiResponse(code = 429, message = "아직 발급 불가.")
     ])
-    fun getAuthCode(@RequestParam(required = true) phoneNumber: String): ResponseData<PhoneAuth> {
+    fun getAuthCode(@RequestParam(required = true) @Size(min = 1, max = 20) phoneNumber: String): ResponseData<PhoneAuth> {
         try {
             return ResponseData(HttpStatus.OK, "조회 및 생성 성공.", authService.getAuthCode(phoneNumber))
         } catch (e: HttpClientErrorException) {
@@ -109,7 +110,7 @@ class AuthController {
         ApiResponse(code = 404, message = "해당 전화번호 유저가 없음."),
         ApiResponse(code = 429, message = "아직 발급 불가.")
     ])
-    fun getPwAuthCode(@RequestParam(required = true) phoneNumber: String): ResponseData<PhonePwAuth> {
+    fun getPwAuthCode(@RequestParam(required = true) @Size(min = 1, max = 20) phoneNumber: String): ResponseData<PhonePwAuth> {
         try {
             return ResponseData(HttpStatus.OK, "조회 및 생성 성공.", authService.getPwAuthCode(phoneNumber))
         } catch (e: HttpClientErrorException) {

@@ -27,14 +27,16 @@ class SwaggerConfig {
     final val DEFAULT_INCLUDE_PATTERN = ".*"
 
     @Bean
-    fun swaggerSpringfoxDocket(): Docket? {
+    fun swaggerSpringfoxDocket(): Docket {
         val contact = Contact(
                 "Contact This",
                 "http://www.flash21.com/main/main.html",
                 "chu799@flash21.com")
         val apiInfo = ApiInfo(
                 "Giftrip API",
-                "모든 API에서\n400-검증오류. 500-서버오류.\n토큰쓰는 API에서\n401-인증 안됨. 410-토큰만료. 404-해당유저없음.",
+            "모든 API에서\n400-검증오류. 500-서버오류.\n" +
+                        "토큰쓰는 API에서\n401-인증 안됨. 410-토큰만료. 404-해당유저없음." +
+                        "\n관리자 403-권한없음.",
                 "0.0.1",
                 "https://github.com/Giftrip/Giftrip_Server/blob/main/LICENSE",
                 contact,
@@ -61,18 +63,18 @@ class SwaggerConfig {
     }
 
 
-    private fun apiKey(): ApiKey? {
+    private fun apiKey(): ApiKey {
         return ApiKey("Bearer Token", AUTHORIZATION_HEADER, "header")
     }
 
-    private fun securityContext(): SecurityContext? {
+    private fun securityContext(): SecurityContext {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
                 .forPaths(regex(DEFAULT_INCLUDE_PATTERN))
                 .build()
     }
 
-    fun defaultAuth(): List<SecurityReference?>? {
+    fun defaultAuth(): List<SecurityReference?> {
         val authorizationScope = AuthorizationScope("global", "accessEverything")
         val authorizationScopes = arrayOfNulls<AuthorizationScope>(1)
         authorizationScopes[0] = authorizationScope
