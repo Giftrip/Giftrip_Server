@@ -24,7 +24,7 @@ class UserController {
     private lateinit var userService: UserServiceImpl
 
     @GetMapping("/getMyInfo")
-    @ApiOperation(value = "내 정보 조회", authorizations = [Authorization("Bearer Token")])
+    @ApiOperation(value = "내 정보 조회 By Token", authorizations = [Authorization("Bearer Token")])
     fun getMyInfo(request: HttpServletRequest): ResponseData<GetMyInfoRO> {
         try {
             val user: User = GetUserByHeader.get(request)
@@ -38,7 +38,7 @@ class UserController {
     }
 
     @PatchMapping("/editMyInfo")
-    @ApiOperation(value = "내 정보 수정", authorizations = [Authorization("Bearer Token")])
+    @ApiOperation(value = "내 정보 수정 By Token", authorizations = [Authorization("Bearer Token")])
     fun editMyInfo(@RequestBody editMyInfoDTO: EditMyInfoDTO, request: HttpServletRequest): Response {
         try {
             val user: User = GetUserByHeader.get(request)

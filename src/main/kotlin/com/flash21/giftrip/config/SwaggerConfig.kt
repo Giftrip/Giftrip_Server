@@ -34,7 +34,7 @@ class SwaggerConfig {
                 "chu799@flash21.com")
         val apiInfo = ApiInfo(
                 "Giftrip API",
-                "Giftrip API Docs",
+                "모든 API에서\n400-검증오류. 500-서버오류.\n토큰쓰는 API에서\n401-인증 안됨. 410-토큰만료. 404-해당유저없음.",
                 "0.0.1",
                 "https://github.com/Giftrip/Giftrip_Server/blob/main/LICENSE",
                 contact,
@@ -44,7 +44,6 @@ class SwaggerConfig {
         var docket = Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo)
                 .pathMapping("/")
-                .apiInfo(ApiInfo.DEFAULT)
                 .forCodeGeneration(true)
                 .genericModelSubstitutes(ResponseEntity::class.java)
                 .ignoredParameterTypes(Pageable::class.java)
