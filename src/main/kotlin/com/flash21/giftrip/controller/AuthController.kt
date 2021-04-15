@@ -75,7 +75,8 @@ class AuthController {
     @ApiOperation(value = "회원가입")
     @ApiResponses(value = [
         ApiResponse(code = 401, message = "인증 정보 불일치."),
-        ApiResponse(code = 409, message = "이미 가입된 전화번호.")
+        ApiResponse(code = 409, message = "이미 가입된 전화번호."),
+        ApiResponse(code = 410, message = "인증 시간 만료")
     ])
     fun register(@RequestBody registerDTO: RegisterDTO): Response {
         try {
@@ -125,7 +126,8 @@ class AuthController {
     @ApiOperation(value = "비밀번호 인증 코드로 변경 (비밀번호 찾기)")
     @ApiResponses(value = [
         ApiResponse(code = 401, message = "인증 정보 불일치."),
-        ApiResponse(code = 404, message = "해당 전화번호 유저가 없음.")
+        ApiResponse(code = 404, message = "해당 전화번호 유저가 없음."),
+        ApiResponse(code = 410, message = "인증 시간 만료")
     ])
     fun changePwByCode(@RequestBody changePwByCodeDTO: ChangePwByCodeDTO): Response {
         try {

@@ -85,6 +85,10 @@ class AuthServiceImpl: AuthService {
                     throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "인증 정보 불일치.")
                 }
 
+        if (phoneAuth.expireAt.before(Date())) {
+            throw HttpClientErrorException(HttpStatus.GONE, "인증시간 만료.")
+        }
+
         userRepo.findByPhoneNumber(registerDTO.phoneNumber)
                 .ifPresent {
                     throw HttpClientErrorException(HttpStatus.CONFLICT, "이미 가입된 전화번호.")
@@ -129,6 +133,10 @@ class AuthServiceImpl: AuthService {
                 .orElseThrow {
                     throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "인증 정보 불일치.")
                 }
+
+        if (phonePwAuth.expireAt.before(Date())) {
+            throw HttpClientErrorException(HttpStatus.GONE, "인증시간 만료.")
+        }
 
         val user: User = userRepo.findByPhoneNumber(changePwByCodeDTO.phoneNumber)
                 .orElseThrow {
