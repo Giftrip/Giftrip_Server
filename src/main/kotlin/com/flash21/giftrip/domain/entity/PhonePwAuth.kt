@@ -15,11 +15,11 @@ class PhonePwAuth {
     var idx: Long? = null
 
     // 코드
-    @Column
-    var code: String? = null
+    @Column(nullable = false, length = 6)
+    var code: String = ""
 
     // 전화번호
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 20)
     var phoneNumber: String = ""
 
     // 만료시간
