@@ -14,6 +14,7 @@ class JwtFilterConfig(private val handlerExceptionResolver: HandlerExceptionReso
         val registrationBean: FilterRegistrationBean<JwtAuthenticationFilter> = FilterRegistrationBean<JwtAuthenticationFilter>()
         registrationBean.filter = JwtAuthenticationFilter(handlerExceptionResolver)
         registrationBean.addUrlPatterns("/auth/changePw")
+        registrationBean.addUrlPatterns("/user/*")
         registrationBean.order = 2
 
         return registrationBean
