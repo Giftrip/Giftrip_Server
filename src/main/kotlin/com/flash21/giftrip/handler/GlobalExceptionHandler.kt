@@ -1,6 +1,7 @@
 package com.flash21.giftrip.handler
 
 import com.flash21.giftrip.domain.ro.http.Response
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -12,7 +13,6 @@ import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.multipart.MultipartException
-import javax.naming.SizeLimitExceededException
 
 @ControllerAdvice
 class GlobalExceptionHandler {
@@ -52,7 +52,7 @@ class GlobalExceptionHandler {
         return ResponseEntity<Response>(data, HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(SizeLimitExceededException::class)
+    @ExceptionHandler(javax.naming.SizeLimitExceededException::class)
     protected fun handleSizeLimitExceededException(e: SizeLimitExceededException): ResponseEntity<Response> {
         val data = Response("너무 크기가 큼.")
         return ResponseEntity(data, HttpStatus.BAD_REQUEST)
@@ -63,4 +63,5 @@ class GlobalExceptionHandler {
         val data = Response("검증 오류.")
         return ResponseEntity<Response>(data, HttpStatus.BAD_REQUEST)
     }
+
 }

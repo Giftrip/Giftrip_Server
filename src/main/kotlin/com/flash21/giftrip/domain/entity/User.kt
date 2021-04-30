@@ -16,6 +16,10 @@ class User {
     @Column(unique = true, nullable = false, length = 20)
     var phoneNumber: String? = null
 
+    // 생년월일
+    @Column(nullable = false)
+    var birth: Date = Date()
+
     // 이름
     @Column(nullable = false, length = 45)
     var name: String? = null
