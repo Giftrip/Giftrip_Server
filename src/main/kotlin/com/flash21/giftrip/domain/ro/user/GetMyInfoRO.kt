@@ -6,7 +6,7 @@ class GetMyInfoRO {
     var idx: Long? = null
     var name: String = ""
     var phoneNumber: String = ""
-    var pw: String = ""
-    var isAdmin: Boolean = false
+    var birth: Date = Date()
+    var admin: Boolean = false
     var createdAt: Date = Date()
 }

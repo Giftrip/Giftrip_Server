@@ -1,5 +1,6 @@
 package com.flash21.giftrip.domain.entity
 
+import org.springframework.data.annotation.CreatedDate
 import java.util.*
 import javax.persistence.*
 
@@ -25,9 +26,10 @@ class User {
 
     // 관리자 여부
     @Column(columnDefinition = "TINYINT(1) default 0", nullable = false)
-    var isAdmin: Boolean = false
+    var admin: Boolean = false
 
     // 가입 날짜
+    @CreatedDate
     @Column(nullable = false)
     val createdAt: Date = Date()
 

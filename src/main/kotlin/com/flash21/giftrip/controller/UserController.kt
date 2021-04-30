@@ -1,9 +1,9 @@
 package com.flash21.giftrip.controller
 
+import com.flash21.giftrip.domain.dto.auth.ChangePwDTO
 import com.flash21.giftrip.domain.dto.user.EditMyInfoDTO
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.ro.http.Response
-import com.flash21.giftrip.domain.ro.http.ResponseData
 import com.flash21.giftrip.domain.ro.user.GetMyInfoRO
 import com.flash21.giftrip.lib.GetUserByHeader
 import com.flash21.giftrip.service.user.UserServiceImpl
@@ -25,10 +25,10 @@ class UserController {
 
     @GetMapping("/getMyInfo")
     @ApiOperation(value = "내 정보 조회 By Token", authorizations = [Authorization("Bearer Token")])
-    fun getMyInfo(request: HttpServletRequest): ResponseData<GetMyInfoRO> {
+    fun getMyInfo(request: HttpServletRequest): GetMyInfoRO {
         try {
             val user: User = GetUserByHeader.get(request)
-            return ResponseData(HttpStatus.OK, "조회 성공.", userService.getMyInfo(user))
+            return userService.getMyInfo(user)
         } catch (e: HttpClientErrorException) {
             throw e
         } catch (e: Exception) {
@@ -43,7 +43,22 @@ class UserController {
         try {
             val user: User = GetUserByHeader.get(request)
             userService.editMyInfo(user, editMyInfoDTO)
-            return Response(HttpStatus.OK, "수정 성공.")
+            return Response("수정 성공.")
+        } catch (e: HttpClientErrorException) {
+            throw e
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
+        }
+    }
+
+    @PatchMapping("/changePw")
+    @ApiOperation(value = "비밀번호 변경 By Token", authorizations = [Authorization(value="Bearer Token")])
+    fun changePw(@RequestBody changePwDTO: ChangePwDTO, request: HttpServletRequest): Response {
+        try {
+            val user: User = request.getAttribute("user") as User
+            userService.changePw(changePwDTO, user)
+            return Response("변경 성공.")
         } catch (e: HttpClientErrorException) {
             throw e
         } catch (e: Exception) {
