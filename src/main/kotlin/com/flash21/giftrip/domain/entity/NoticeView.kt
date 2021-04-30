@@ -1,6 +1,5 @@
 package com.flash21.giftrip.domain.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import org.springframework.data.annotation.CreatedDate
@@ -8,7 +7,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class Notice {
+class NoticeView {
 
     // 순서
     @Id
@@ -19,27 +18,15 @@ class Notice {
     @JoinColumn(name = "user_idx")
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     var user: User? = null
 
-    // 제목
-    @Column(length = 50, nullable = false)
-    var title: String = ""
+    // 공지 순서
+    @JoinColumn(name = "notice_idx")
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    var notice: Notice? = null
 
-    // 내용
-    @Column(columnDefinition = "TEXT", nullable = false)
-    var content: String = ""
-
-    // 썸네일
-    @Column(nullable = true)
-    var thumbnail: String? = null
-
-    // 생성자의 ip
-    @JsonIgnore
-    @Column(length = 20)
-    var ip: String? = null
-
-    // 생성 날짜
+    // 읽은 날짜
     @CreatedDate
     @Column(nullable = false)
     val createdAt: Date = Date()

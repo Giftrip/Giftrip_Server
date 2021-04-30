@@ -13,7 +13,7 @@ class HandleNoticeDTO {
     @NotBlank
     val content: String = ""
 
-    @Size(min = 0, max = 5)
-    val thumbnails: MutableList<String> = mutableListOf()
+    @Size(min = 1, max = 255)
+    val thumbnail: String = ""
 
 }

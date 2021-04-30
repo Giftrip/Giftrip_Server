@@ -1,5 +1,6 @@
 package com.flash21.giftrip.service.user
 
+import com.flash21.giftrip.domain.dto.auth.ChangePwDTO
 import com.flash21.giftrip.domain.dto.user.EditMyInfoDTO
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.repository.UserRepo
@@ -20,6 +21,11 @@ class UserServiceImpl: UserService {
 
     override fun editMyInfo(user: User, editMyInfoDTO: EditMyInfoDTO) {
         user.name = editMyInfoDTO.name
+        userRepo.save(user)
+    }
+
+    override fun changePw(changePwDTO: ChangePwDTO, user: User) {
+        user.pw = changePwDTO.pw
         userRepo.save(user)
     }
 
