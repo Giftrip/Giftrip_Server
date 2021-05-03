@@ -7,10 +7,10 @@ class LoginDTO {
 
     @NotBlank
     @Size(min = 1, max = 20)
-    val phoneNumber: String = ""
+    var phoneNumber: String = ""
 
     @NotBlank
     @Size(min = 1, max = 128)
-    val pw: String = ""
+    var pw: String = ""
 
 }

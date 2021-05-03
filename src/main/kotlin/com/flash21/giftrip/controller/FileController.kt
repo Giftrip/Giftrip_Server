@@ -1,7 +1,7 @@
 package com.flash21.giftrip.controller
 
 import com.flash21.giftrip.domain.ro.file.FileUploadRO
-import com.flash21.giftrip.domain.ro.http.ResponseData
+import com.flash21.giftrip.domain.ro.http.Response
 import com.flash21.giftrip.lib.GetUserByHeader
 import com.flash21.giftrip.service.file.FileServiceImpl
 import io.swagger.annotations.ApiOperation
@@ -36,10 +36,11 @@ class FileController {
     @PostMapping("/upload")
     @ApiOperation("파일 업로드 (관리자)", authorizations = [Authorization(value="Bearer Token")])
     @ApiResponses(value = [
-        ApiResponse(code = 400, message = "확장자 오류, 크기 오류, 검증오류")
+        ApiResponse(code = 200, message = "성공.", response = FileUploadRO::class),
+        ApiResponse(code = 400, message = "확장자 오류, 크기 오류, 검증오류", response = Response::class)
     ])
     fun uploadFile(@RequestParam(value = "file", required = true) file: MultipartFile,
-                   request: HttpServletRequest): ResponseData<FileUploadRO> {
+                   request: HttpServletRequest): FileUploadRO {
         try {
             GetUserByHeader.getAdmin(request)
             if (file.isEmpty || (FilenameUtils.getExtension(file.originalFilename) != "png"
@@ -49,8 +50,7 @@ class FileController {
                             && FilenameUtils.getExtension(file.originalFilename) != "svg")) {
                 throw HttpClientErrorException(HttpStatus.BAD_REQUEST, "검증 오류.")
             }
-            val data: FileUploadRO = FileUploadRO(fileService.storeFile(file))
-            return ResponseData(HttpStatus.OK, "업로드 성공.", data)
+            return FileUploadRO(fileService.storeFile(file))
         } catch (e: HttpClientErrorException) {
             throw e
         } catch (e: SizeLimitExceededException) {
@@ -64,7 +64,7 @@ class FileController {
     @GetMapping("/getImage/{fileName}")
     @ApiOperation("이미지 조회")
     @ApiResponses(value = [
-        ApiResponse(code = 404, message = "해당 사진이 없음.")
+        ApiResponse(code = 404, message = "해당 사진이 없음.", response = Response::class)
     ])
     fun getImage(@PathVariable(required = true) fileName: String, request: HttpServletRequest): ResponseEntity<*>? {
         val resource: Resource = fileService.loadFileAsResource(fileName)

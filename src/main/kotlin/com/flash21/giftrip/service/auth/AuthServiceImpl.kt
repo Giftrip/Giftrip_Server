@@ -9,7 +9,6 @@ import com.flash21.giftrip.domain.repository.PhonePwAuthRepo
 import com.flash21.giftrip.domain.repository.UserRepo
 import com.flash21.giftrip.domain.ro.auth.TokenRO
 import com.flash21.giftrip.domain.ro.auth.AuthTokenModel
-import com.flash21.giftrip.domain.ro.auth.LoginRO
 import com.flash21.giftrip.enums.JwtAuth
 import com.flash21.giftrip.lib.GenerateCode
 import com.flash21.giftrip.service.jwt.JwtServiceImpl
@@ -40,7 +39,7 @@ class AuthServiceImpl: AuthService {
     @Autowired
     private lateinit var userService: UserServiceImpl
 
-    override fun login(loginDTO: LoginDTO): LoginRO {
+    override fun login(loginDTO: LoginDTO): TokenRO {
         val user: User = userRepo.findByPhoneNumberAndPw(loginDTO.phoneNumber, loginDTO.pw)
                 .orElseThrow {
                     throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "잘못된 정보.")
@@ -49,7 +48,7 @@ class AuthServiceImpl: AuthService {
         val accessToken: AuthTokenModel = jwtService.createToken(user, JwtAuth.ACCESS)
         val refreshToken: AuthTokenModel = jwtService.createToken(user, JwtAuth.REFRESH)
 
-        return LoginRO(userService.getMyInfo(user), TokenRO(accessToken, refreshToken))
+        return TokenRO(accessToken, refreshToken)
     }
 
     override fun refresh(refreshToken: String): TokenRO {
@@ -97,11 +96,6 @@ class AuthServiceImpl: AuthService {
         val user: User = ModelMapper().map(registerDTO, User::class.java)
 
         phoneAuthRepo.delete(phoneAuth)
-        userRepo.save(user)
-    }
-
-    override fun changePw(changePwDTO: ChangePwDTO, user: User) {
-        user.pw = changePwDTO.pw
         userRepo.save(user)
     }
 
