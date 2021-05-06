@@ -36,6 +36,8 @@ class JwtServiceImpl: JwtService {
      * @return Token
      */
     override fun createToken(user: User, authType: JwtAuth): AuthTokenModel {
+        if (user.deleted) throw HttpClientErrorException(HttpStatus.NOT_FOUND, "탈퇴한 회원.")
+
         var expiredAt: Date = Date()
         var secretKey: String? = null
 
@@ -92,10 +94,14 @@ class JwtServiceImpl: JwtService {
                 throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "토큰 타입이 아님.")
             }
 
-            return userRepo.findById(claims["idx"].toString().toLong())
+            val user: User = userRepo.findById(claims["idx"].toString().toLong())
                     .orElseThrow {
                         HttpClientErrorException(HttpStatus.NOT_FOUND, "유저 없음.")
                     }
+
+            if (user.deleted) throw HttpClientErrorException(HttpStatus.NOT_FOUND, "탈퇴한 회원.")
+
+            return user
 
         } catch (e: ExpiredJwtException) {
             throw HttpClientErrorException(HttpStatus.GONE, "토큰 만료.")
@@ -140,6 +146,8 @@ class JwtServiceImpl: JwtService {
                     .orElseThrow {
                         HttpClientErrorException(HttpStatus.NOT_FOUND, "유저 없음.")
                     }
+
+            if (user.deleted) throw HttpClientErrorException(HttpStatus.NOT_FOUND, "탈퇴한 회원.")
 
             var newRefreshToken: AuthTokenModel? = null
 
