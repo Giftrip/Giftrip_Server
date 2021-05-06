@@ -3,7 +3,6 @@ package com.flash21.giftrip.controller
 import com.flash21.giftrip.domain.dto.auth.*
 import com.flash21.giftrip.domain.entity.PhoneAuth
 import com.flash21.giftrip.domain.entity.PhonePwAuth
-import com.flash21.giftrip.domain.ro.auth.LoginRO
 import com.flash21.giftrip.domain.ro.auth.TokenRO
 import com.flash21.giftrip.domain.ro.http.Response
 import com.flash21.giftrip.service.auth.AuthServiceImpl

@@ -37,4 +37,7 @@ class User {
     @Column(nullable = false)
     val createdAt: Date = Date()
 
+    @Column(columnDefinition = "TINYINT(1) default 0", nullable = false)
+    var deleted: Boolean = false
+
 }

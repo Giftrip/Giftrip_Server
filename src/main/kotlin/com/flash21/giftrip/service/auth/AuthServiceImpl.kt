@@ -45,6 +45,8 @@ class AuthServiceImpl: AuthService {
                     throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "잘못된 정보.")
                 }
 
+        if (user.deleted) throw HttpClientErrorException(HttpStatus.UNAUTHORIZED, "탈퇴한 회원.")
+
         val accessToken: AuthTokenModel = jwtService.createToken(user, JwtAuth.ACCESS)
         val refreshToken: AuthTokenModel = jwtService.createToken(user, JwtAuth.REFRESH)
 

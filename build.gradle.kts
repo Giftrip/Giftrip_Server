@@ -19,15 +19,20 @@ repositories {
 dependencies {
 	// 이거 없으면 시작하자마자 꺼짐
 	implementation("org.springframework.boot:spring-boot-starter-web")
+
+	// validator
 	implementation("org.hibernate:hibernate-validator:6.1.5.Final")
 
+    // FileUtils 사용을 위함.
 	implementation("commons-io:commons-io:2.8.0")
 
+	// Swagger
 	implementation("io.springfox:springfox-swagger2:2.9.2")
 	implementation("io.springfox:springfox-bean-validators:2.9.2")
 	implementation("io.springfox:springfox-swagger-ui:2.9.2")
 	implementation("org.bitbucket.tek-nik:spring-swagger-simplified:1.0.8")
 
+	// JWT
 	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
 	implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
