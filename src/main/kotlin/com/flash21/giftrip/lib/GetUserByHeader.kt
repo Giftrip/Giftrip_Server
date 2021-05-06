@@ -11,14 +11,19 @@ class GetUserByHeader {
     companion object {
 
         fun get(request: HttpServletRequest): User {
-            val user: User? = request.getAttribute("user") as User?
-            return user?: throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Jwt Filter Error")
+            val user: User = request.getAttribute("user") as User?
+                    ?: throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Jwt Filter Error")
+
+            if (user.deleted) throw HttpClientErrorException(HttpStatus.NOT_FOUND, "삭제된 유저.")
+
+            return user
         }
 
         fun getAdmin(request: HttpServletRequest): User {
             val user: User = request.getAttribute("user") as User?
                     ?: throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Jwt Filter Error")
 
+            if (user.deleted) throw HttpClientErrorException(HttpStatus.NOT_FOUND, "삭제된 유저.")
             if (!user.admin) throw HttpClientErrorException(HttpStatus.FORBIDDEN, "권한 없음.")
             return user
         }

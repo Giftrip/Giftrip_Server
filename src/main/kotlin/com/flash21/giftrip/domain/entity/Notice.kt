@@ -1,9 +1,10 @@
 package com.flash21.giftrip.domain.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import org.springframework.data.annotation.CreatedDate
+import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
 import javax.persistence.*
 
@@ -19,7 +20,6 @@ class Notice {
     @JoinColumn(name = "user_idx")
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     var user: User? = null
 
     // 제목
@@ -40,8 +40,13 @@ class Notice {
     var ip: String? = null
 
     // 생성 날짜
-    @CreatedDate
+    @CreationTimestamp
     @Column(nullable = false)
     val createdAt: Date = Date()
+
+    // 수정 날짜
+    @UpdateTimestamp
+    @Column(nullable = false)
+    var updatedAt: Date = Date()
 
 }

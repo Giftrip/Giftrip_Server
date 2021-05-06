@@ -50,10 +50,12 @@ class NoticeController {
         ApiResponse(code = 200, message = "성공.", response = Response::class),
         ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
     ])
-    fun editNotice(@PathVariable idx: Long, request: HttpServletRequest): Response {
+    fun editNotice(@RequestBody handleNoticeDTO: HandleNoticeDTO,
+                   @PathVariable idx: Long, request: HttpServletRequest): Response {
         try {
             GetUserByHeader.getAdmin(request)
-            return Response("조회 성공.")
+            noticeService.editNotice(handleNoticeDTO, idx)
+            return Response("수정 성공.")
         } catch (e: HttpClientErrorException) {
             throw e
         } catch (e: Exception) {
@@ -71,6 +73,7 @@ class NoticeController {
     fun deleteNotice(@PathVariable idx: Long, request: HttpServletRequest): Response {
         try {
             GetUserByHeader.getAdmin(request)
+            noticeService.deleteNotice(idx)
             return Response("삭제 성공.")
         } catch (e: HttpClientErrorException) {
             throw e
