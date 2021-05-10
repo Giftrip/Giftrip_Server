@@ -17,6 +17,7 @@ class JwtFilterConfig(private val handlerExceptionResolver: HandlerExceptionReso
         registrationBean.addUrlPatterns("/user/*")
         registrationBean.addUrlPatterns("/notice/*")
         registrationBean.addUrlPatterns("/course/*")
+        registrationBean.addUrlPatterns("/spot/*")
         registrationBean.order = 2
 
         return registrationBean
