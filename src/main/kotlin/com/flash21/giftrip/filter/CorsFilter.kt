@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletResponse
 
 @Component
 @Order(1)
-class CorsFilter: Filter {
-
+class CorsFilter : Filter {
+    
     override fun doFilter(req: ServletRequest?, res: ServletResponse, chain: FilterChain) {
         val response = res as HttpServletResponse
         response.setHeader("Access-Control-Allow-Origin", "*")
@@ -17,10 +17,10 @@ class CorsFilter: Filter {
         response.setHeader("Access-Control-Max-Age", "-1")
         response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers, Cache-Control, Pragma, Expires")
         response.setHeader("Access-Control-Expose-Headers", "content-disposition")
-
+        
         chain.doFilter(req, res)
     }
-
+    
     override fun init(filterConfig: FilterConfig?) {}
     override fun destroy() {}
 }

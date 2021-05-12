@@ -17,32 +17,32 @@ import javax.servlet.http.HttpServletResponse
 
 
 @Component
-class JwtAuthenticationFilter(private val handlerExceptionResolver: HandlerExceptionResolver): Filter {
-
+class JwtAuthenticationFilter(private val handlerExceptionResolver: HandlerExceptionResolver) : Filter {
+    
     @Autowired
     private lateinit var jwtServiceImpl: JwtServiceImpl
-
+    
     override fun init(cfg: FilterConfig) {
         val ctx: ApplicationContext = WebApplicationContextUtils
                 .getRequiredWebApplicationContext(cfg.servletContext)
         this.jwtServiceImpl = ctx.getBean(JwtServiceImpl::class.java)
     }
-
+    
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         try {
             val token: String = AuthorizationExtractor.extract(request as HttpServletRequest, "Bearer")
-
+            
             // cors
             if (request.method != "OPTIONS") {
                 if (StringUtils.isEmpty(token)) {
                     throw HttpClientErrorException(HttpStatus.BAD_REQUEST, "검증 오류.")
                 }
-
+                
                 val user: User = jwtServiceImpl.validateToken(token)
-
+                
                 request.setAttribute("user", user)
             }
-
+            
             chain.doFilter(request, response)
         } catch (e: Exception) {
             handlerExceptionResolver.resolveException(request as HttpServletRequest, response as HttpServletResponse, null, e)

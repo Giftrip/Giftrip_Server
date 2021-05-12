@@ -17,6 +17,9 @@ repositories {
 }
 
 dependencies {
+	// gson
+	implementation("com.google.code.gson:gson:2.8.6")
+	
 	// 이거 없으면 시작하자마자 꺼짐
 	implementation("org.springframework.boot:spring-boot-starter-web")
 

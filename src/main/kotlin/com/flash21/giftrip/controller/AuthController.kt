@@ -19,10 +19,10 @@ import javax.validation.constraints.Size
 @RestController
 @RequestMapping("/auth")
 class AuthController {
-
+    
     @Autowired
     private lateinit var authService: AuthServiceImpl
-
+    
     @PostMapping("/login")
     @ApiOperation(value = "로그인 API")
     @ApiResponses(value = [
@@ -39,7 +39,7 @@ class AuthController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @PostMapping("/refresh")
     @ApiOperation(value = "토큰갱신 API", notes = "response.data.token.refreshToken 은 nullable 로 refreshToken이 만료 3시간 전이면 자동으로 refreshToken도 같이 갱신")
     @ApiResponses(value = [
@@ -57,7 +57,7 @@ class AuthController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @GetMapping("/getAuthCode")
     @ApiOperation(value = "휴대폰 인증 생성 및 코드 조회")
     @ApiResponses(value = [
@@ -75,7 +75,7 @@ class AuthController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @PostMapping("/register")
     @ApiOperation(value = "회원가입")
     @ApiResponses(value = [
@@ -98,7 +98,7 @@ class AuthController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @GetMapping("/getPwAuthCode")
     @ApiOperation(value = "비밀번호 변경 휴대폰 인증 생성 및 코드 조회 (비밀번호 찾기)")
     @ApiResponses(value = [
@@ -116,7 +116,7 @@ class AuthController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @PatchMapping("/changePwByCode")
     @ApiOperation(value = "비밀번호 인증 코드로 변경 (비밀번호 찾기)")
     @ApiResponses(value = [
@@ -136,5 +136,5 @@ class AuthController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
 }
