@@ -1,6 +1,6 @@
 package com.flash21.giftrip.service.user
 
-import com.flash21.giftrip.domain.dto.auth.ChangePwDTO
+import com.flash21.giftrip.domain.dto.user.ChangePwDTO
 import com.flash21.giftrip.domain.dto.user.EditMyInfoDTO
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.ro.user.GetMyInfoRO

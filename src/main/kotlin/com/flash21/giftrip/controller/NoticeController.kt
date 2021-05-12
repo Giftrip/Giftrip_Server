@@ -22,12 +22,12 @@ import javax.validation.constraints.Min
 @RestController
 @RequestMapping("/notice")
 class NoticeController {
-
+    
     @Autowired
     private lateinit var noticeService: NoticeServiceImpl
-
+    
     @PostMapping("/createNotice")
-    @ApiOperation(value = "공지 생성 (관리자)", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation(value = "공지 생성 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
     fun createNotice(@RequestBody handleNoticeDTO: HandleNoticeDTO,
                      request: HttpServletRequest): Response {
         try {
@@ -41,9 +41,9 @@ class NoticeController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @PatchMapping("/editNotice/{idx}")
-    @ApiOperation(value = "공지 수정 (관리자)", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation(value = "공지 수정 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = Response::class),
         ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
@@ -61,9 +61,9 @@ class NoticeController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @DeleteMapping("/deleteNotice/{idx}")
-    @ApiOperation(value = "공지 삭제 (관리자)", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation(value = "공지 삭제 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = Response::class),
         ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
@@ -80,12 +80,12 @@ class NoticeController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @GetMapping("/getNotices")
-    @ApiOperation(value = "공지 목록 조회", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation(value = "공지 목록 조회", authorizations = [Authorization(value = "Bearer Token")])
     fun getNotices(@RequestParam(required = true) @Min(1) page: Int,
                    @RequestParam(required = true) @Min(1) size: Int,
-                    request: HttpServletRequest): GetNoticesRO {
+                   request: HttpServletRequest): GetNoticesRO {
         try {
             val user: User = ClientUtils.getUser(request)
             return noticeService.getNotices(page, size, user)
@@ -96,9 +96,9 @@ class NoticeController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @GetMapping("/getNotice/{idx}")
-    @ApiOperation(value = "공지 조회", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation(value = "공지 조회", authorizations = [Authorization(value = "Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = GetNoticeRO::class),
         ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
@@ -114,5 +114,5 @@ class NoticeController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
 }

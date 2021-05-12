@@ -1,6 +1,6 @@
 package com.flash21.giftrip.controller
 
-import com.flash21.giftrip.domain.dto.auth.ChangePwDTO
+import com.flash21.giftrip.domain.dto.user.ChangePwDTO
 import com.flash21.giftrip.domain.dto.user.EditMyInfoDTO
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.ro.http.Response
@@ -19,10 +19,10 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/user")
 class UserController {
-
+    
     @Autowired
     private lateinit var userService: UserServiceImpl
-
+    
     @GetMapping("/getMyInfo")
     @ApiOperation(value = "내 정보 조회 By Token", authorizations = [Authorization("Bearer Token")])
     fun getMyInfo(request: HttpServletRequest): GetMyInfoRO {
@@ -36,7 +36,7 @@ class UserController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @PatchMapping("/editMyInfo")
     @ApiOperation(value = "내 정보 수정 By Token", authorizations = [Authorization("Bearer Token")])
     fun editMyInfo(@RequestBody editMyInfoDTO: EditMyInfoDTO, request: HttpServletRequest): Response {
@@ -51,9 +51,9 @@ class UserController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @PatchMapping("/changePw")
-    @ApiOperation(value = "비밀번호 변경 By Token", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation(value = "비밀번호 변경 By Token", authorizations = [Authorization(value = "Bearer Token")])
     fun changePw(@RequestBody changePwDTO: ChangePwDTO, request: HttpServletRequest): Response {
         try {
             val user: User = request.getAttribute("user") as User
@@ -66,5 +66,5 @@ class UserController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
 }

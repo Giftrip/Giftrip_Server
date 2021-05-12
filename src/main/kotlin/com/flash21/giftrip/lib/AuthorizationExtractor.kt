@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest
 
 @Component
 class AuthorizationExtractor {
-
+    
     companion object {
         val AUTHORIZATION: String = "Authorization"
-
+        
         fun extract(request: HttpServletRequest, type: String): String {
             val headers: Enumeration<String> = request.getHeaders(AUTHORIZATION)
             while (headers.hasMoreElements()) {
@@ -19,9 +19,9 @@ class AuthorizationExtractor {
                     return value.substring(type.length).trim()
                 }
             }
-
+            
             return Strings.EMPTY
         }
     }
-
+    
 }

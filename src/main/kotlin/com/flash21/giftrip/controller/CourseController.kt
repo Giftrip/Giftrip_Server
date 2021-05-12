@@ -26,7 +26,7 @@ class CourseController {
     private lateinit var courseService: CourseServiceImpl
 
     @PostMapping("/createCourse")
-    @ApiOperation(value = "코스 생성 (관리자)", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation(value = "코스 생성 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
     fun createCourse(@RequestBody handleCourseDTO: HandleCourseDTO,
                      request: HttpServletRequest): Response {
         try {

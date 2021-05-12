@@ -29,12 +29,12 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/file")
 class FileController {
-
+    
     @Autowired
     private lateinit var fileService: FileServiceImpl
-
+    
     @PostMapping("/upload")
-    @ApiOperation("파일 업로드 (관리자)", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation("파일 업로드 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = FileUploadRO::class),
         ApiResponse(code = 400, message = "확장자 오류, 크기 오류, 검증오류", response = Response::class)
@@ -60,13 +60,21 @@ class FileController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @GetMapping("/getImage/{fileName}")
     @ApiOperation("이미지 조회")
     @ApiResponses(value = [
         ApiResponse(code = 404, message = "해당 사진이 없음.", response = Response::class)
     ])
     fun getImage(@PathVariable(required = true) fileName: String, request: HttpServletRequest): ResponseEntity<*>? {
+        if (FilenameUtils.getExtension(fileName) != "png"
+                && FilenameUtils.getExtension(fileName) != "jpg"
+                && FilenameUtils.getExtension(fileName) != "jpeg"
+                && FilenameUtils.getExtension(fileName) != "gif"
+                && FilenameUtils.getExtension(fileName) != "svg") {
+            throw HttpClientErrorException(HttpStatus.NOT_FOUND, "파일 없음.")
+        }
+        
         val resource: Resource = fileService.loadFileAsResource(fileName)
         val contentType: String = try {
             request.servletContext.getMimeType(resource.file.absolutePath)
@@ -75,10 +83,10 @@ class FileController {
         } catch (e: NullPointerException) {
             throw HttpClientErrorException(HttpStatus.NOT_FOUND, "해당 파일이 이미지가 아님.")
         }
-
+        
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(resource)
     }
-
+    
 }
