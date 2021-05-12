@@ -3,6 +3,7 @@ package com.flash21.giftrip.controller
 import com.flash21.giftrip.domain.dto.course.HandleCourseDTO
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.ro.course.GetCourseRO
+import com.flash21.giftrip.domain.ro.course.GetCoursesRO
 import com.flash21.giftrip.domain.ro.http.Response
 import com.flash21.giftrip.lib.ClientUtils
 import com.flash21.giftrip.service.course.CourseServiceImpl
@@ -84,7 +85,7 @@ class CourseController {
     @ApiOperation(value = "코스 목록 조회", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
     fun getCourse(@RequestParam(required = true) @Min(1) page: Int,
                   @RequestParam(required = true) @Min(1) size: Int,
-                  request: HttpServletRequest): List<GetCourseRO> {
+                  request: HttpServletRequest): GetCoursesRO {
         try {
             val user: User = ClientUtils.getUser(request)
             return courseService.getCourses(page, size, user)
@@ -118,7 +119,7 @@ class CourseController {
     @ApiOperation(value = "코스 목록 검색", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
     fun searchCourses(@RequestParam(required = true) @Min(1) page: Int,
                       @RequestParam(required = true) @Min(1) size: Int,
-                      @RequestParam(value = "query", required = true) query: String, request: HttpServletRequest): List<GetCourseRO> {
+                      @RequestParam(value = "query", required = true) query: String, request: HttpServletRequest): GetCoursesRO {
         try {
             val user: User = ClientUtils.getUser(request)
             return courseService.searchCourses(page, size, query, user)

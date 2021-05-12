@@ -1,6 +1,7 @@
 package com.flash21.giftrip.domain.dto.spot
 
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
 
 class HandleSpotDTO {
@@ -20,7 +21,7 @@ class HandleSpotDTO {
     @Size(min = 1, max = 100)
     val address: String = ""
     
-    @Size(min = 1)
+    @NotEmpty
     val thumbnails: List<String> = listOf()
     
     @NotBlank
