@@ -7,6 +7,7 @@ import com.flash21.giftrip.domain.repository.CourseRepo
 import com.flash21.giftrip.domain.repository.GiftLogRepo
 import com.flash21.giftrip.domain.ro.course.GetCourseRO
 import com.flash21.giftrip.domain.ro.course.GetCoursesRO
+import com.flash21.giftrip.domain.ro.course.GetRecentlyCompleteRO
 import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -94,6 +95,25 @@ class CourseServiceImpl : CourseService {
         }
         
         return GetCoursesRO(result, list)
+    }
+    
+    override fun getRecentlyComplete(idx: Long, user: User): List<GetRecentlyCompleteRO> {
+        val course = courseRepo.findById(idx)
+                .orElseThrow {
+                    throw HttpClientErrorException(HttpStatus.NOT_FOUND, "해당 코스 없음.")
+                }
+        
+        // TODO 최근 20
+        val item = PageRequest.of(0, 20, Sort.by("createdAt").descending())
+        
+        val result: MutableList<GetRecentlyCompleteRO> = mutableListOf()
+        val list = giftLogRepo.findAllByCourse(course, item)
+        
+        list.map {
+            result.add(GetRecentlyCompleteRO(it))
+        }
+        
+        return result
     }
     
 }

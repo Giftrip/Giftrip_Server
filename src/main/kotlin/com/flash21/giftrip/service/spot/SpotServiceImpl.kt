@@ -180,7 +180,7 @@ class SpotServiceImpl : SpotService {
             giftLog.endAt = Date()
             
             // TODO 기프티콘 키
-            giftLog.giftKey = "THISISKEY"
+//            giftLog.giftKey =
             
             giftLogRepo.save(giftLog)
         }

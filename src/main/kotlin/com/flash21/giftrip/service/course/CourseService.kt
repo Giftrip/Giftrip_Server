@@ -4,6 +4,7 @@ import com.flash21.giftrip.domain.dto.course.HandleCourseDTO
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.ro.course.GetCourseRO
 import com.flash21.giftrip.domain.ro.course.GetCoursesRO
+import com.flash21.giftrip.domain.ro.course.GetRecentlyCompleteRO
 
 interface CourseService {
     fun createCourse(handleCourseDTO: HandleCourseDTO, ip: String, user: User)
@@ -12,4 +13,5 @@ interface CourseService {
     fun getCourses(page: Int, size: Int, user: User): GetCoursesRO
     fun getCourse(idx: Long, user: User): GetCourseRO
     fun searchCourses(page: Int, size: Int, query: String, user: User): GetCoursesRO
+    fun getRecentlyComplete(idx: Long, user: User): List<GetRecentlyCompleteRO>
 }

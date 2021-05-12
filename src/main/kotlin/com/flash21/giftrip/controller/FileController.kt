@@ -20,7 +20,6 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
-import java.lang.NullPointerException
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -34,7 +33,7 @@ class FileController {
     private lateinit var fileService: FileServiceImpl
     
     @PostMapping("/upload")
-    @ApiOperation("파일 업로드 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiOperation("파일 업로드", authorizations = [Authorization(value = "Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = FileUploadRO::class),
         ApiResponse(code = 400, message = "확장자 오류, 크기 오류, 검증오류", response = Response::class)
@@ -42,7 +41,7 @@ class FileController {
     fun uploadFile(@RequestParam(value = "file", required = true) file: MultipartFile,
                    request: HttpServletRequest): FileUploadRO {
         try {
-            ClientUtils.getAdmin(request)
+            ClientUtils.getUser(request)
             if (file.isEmpty || (FilenameUtils.getExtension(file.originalFilename) != "png"
                             && FilenameUtils.getExtension(file.originalFilename) != "jpg"
                             && FilenameUtils.getExtension(file.originalFilename) != "jpeg"
