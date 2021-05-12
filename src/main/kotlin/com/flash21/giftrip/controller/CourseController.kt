@@ -3,7 +3,10 @@ package com.flash21.giftrip.controller
 import com.flash21.giftrip.domain.dto.course.HandleCourseDTO
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.ro.course.GetCourseRO
+import com.flash21.giftrip.domain.ro.course.GetCoursesRO
+import com.flash21.giftrip.domain.ro.course.GetRecentlyCompleteRO
 import com.flash21.giftrip.domain.ro.http.Response
+import com.flash21.giftrip.domain.ro.notice.GetNoticeRO
 import com.flash21.giftrip.lib.ClientUtils
 import com.flash21.giftrip.service.course.CourseServiceImpl
 import io.swagger.annotations.ApiOperation
@@ -80,22 +83,6 @@ class CourseController {
         }
     }
     
-    @GetMapping("/getCourses")
-    @ApiOperation(value = "코스 목록 조회", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
-    fun getCourse(@RequestParam(required = true) @Min(1) page: Int,
-                  @RequestParam(required = true) @Min(1) size: Int,
-                  request: HttpServletRequest): List<GetCourseRO> {
-        try {
-            val user: User = ClientUtils.getUser(request)
-            return courseService.getCourses(page, size, user)
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
-    }
-    
     @GetMapping("/getCourse/{idx}")
     @ApiOperation(value = "코스 조회", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
     @ApiResponses(value = [
@@ -114,14 +101,48 @@ class CourseController {
         }
     }
     
+    @GetMapping("/getCourses")
+    @ApiOperation(value = "코스 목록 조회", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
+    fun getCourse(@RequestParam(required = true) @Min(1) page: Int,
+                  @RequestParam(required = true) @Min(1) size: Int,
+                  request: HttpServletRequest): GetCoursesRO {
+        try {
+            val user: User = ClientUtils.getUser(request)
+            return courseService.getCourses(page, size, user)
+        } catch (e: HttpClientErrorException) {
+            throw e
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
+        }
+    }
+    
     @GetMapping("/searchCourses")
     @ApiOperation(value = "코스 목록 검색", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
     fun searchCourses(@RequestParam(required = true) @Min(1) page: Int,
                       @RequestParam(required = true) @Min(1) size: Int,
-                      @RequestParam(value = "query", required = true) query: String, request: HttpServletRequest): List<GetCourseRO> {
+                      @RequestParam(value = "query", required = true) query: String, request: HttpServletRequest): GetCoursesRO {
         try {
             val user: User = ClientUtils.getUser(request)
             return courseService.searchCourses(page, size, query, user)
+        } catch (e: HttpClientErrorException) {
+            throw e
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
+        }
+    }
+    
+    @GetMapping("/getRecentlyComplete/{idx}")
+    @ApiOperation(value = "공지 조회", authorizations = [Authorization("Bearer Token")])
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "성공.", response = GetNoticeRO::class),
+        ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
+    ])
+    fun getRecentlyComplete(@PathVariable idx: Long, request: HttpServletRequest): List<GetRecentlyCompleteRO> {
+        try {
+            val user: User = ClientUtils.getUser(request)
+            return courseService.getRecentlyComplete(idx, user)
         } catch (e: HttpClientErrorException) {
             throw e
         } catch (e: Exception) {

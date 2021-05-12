@@ -24,6 +24,10 @@ class User {
     @Column(nullable = false, length = 45)
     var name: String? = null
     
+    // 프사
+    @Column(nullable = true)
+    var profileImage: String? = null
+    
     // 비번
     @Column(nullable = false, length = 128)
     var pw: String? = null

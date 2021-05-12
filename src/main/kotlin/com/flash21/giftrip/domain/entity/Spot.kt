@@ -63,7 +63,7 @@ class Spot {
     var explanation: String = ""
     
     // NFC
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false, unique = true)
     var nfcCode: String = ""
     
     // 생성 날짜

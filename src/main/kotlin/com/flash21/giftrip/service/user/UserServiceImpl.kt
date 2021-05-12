@@ -21,6 +21,7 @@ class UserServiceImpl : UserService {
     
     override fun editMyInfo(user: User, editMyInfoDTO: EditMyInfoDTO) {
         user.name = editMyInfoDTO.name
+        user.profileImage = editMyInfoDTO.profileImage
         userRepo.save(user)
     }
     

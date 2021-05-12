@@ -27,7 +27,7 @@ class NoticeController {
     private lateinit var noticeService: NoticeServiceImpl
     
     @PostMapping("/createNotice")
-    @ApiOperation(value = "공지 생성 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiOperation(value = "공지 생성 (관리자)", authorizations = [Authorization("Bearer Token")])
     fun createNotice(@RequestBody handleNoticeDTO: HandleNoticeDTO,
                      request: HttpServletRequest): Response {
         try {
@@ -43,7 +43,7 @@ class NoticeController {
     }
     
     @PatchMapping("/editNotice/{idx}")
-    @ApiOperation(value = "공지 수정 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiOperation(value = "공지 수정 (관리자)", authorizations = [Authorization("Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = Response::class),
         ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
@@ -63,7 +63,7 @@ class NoticeController {
     }
     
     @DeleteMapping("/deleteNotice/{idx}")
-    @ApiOperation(value = "공지 삭제 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiOperation(value = "공지 삭제 (관리자)", authorizations = [Authorization("Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = Response::class),
         ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
@@ -82,7 +82,7 @@ class NoticeController {
     }
     
     @GetMapping("/getNotices")
-    @ApiOperation(value = "공지 목록 조회", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiOperation(value = "공지 목록 조회", authorizations = [Authorization("Bearer Token")])
     fun getNotices(@RequestParam(required = true) @Min(1) page: Int,
                    @RequestParam(required = true) @Min(1) size: Int,
                    request: HttpServletRequest): GetNoticesRO {
@@ -98,7 +98,7 @@ class NoticeController {
     }
     
     @GetMapping("/getNotice/{idx}")
-    @ApiOperation(value = "공지 조회", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiOperation(value = "공지 조회", authorizations = [Authorization("Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = GetNoticeRO::class),
         ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
