@@ -34,9 +34,9 @@ class CourseServiceImpl : CourseService {
         course.description = handleCourseDTO.description
         course.city = handleCourseDTO.city
         course.thumbnail = handleCourseDTO.thumbnail
-        logger.info("$ip USER ${user.idx} - CREATE\n${Gson().toJson(course)}")
         
         courseRepo.save(course)
+        logger.info("$ip USER ${user.idx} - CREATE\n${Gson().toJson(course)}")
     }
     
     override fun editCourse(handleCourseDTO: HandleCourseDTO, idx: Long, ip: String, user: User) {
@@ -47,17 +47,17 @@ class CourseServiceImpl : CourseService {
         course.description = handleCourseDTO.description
         course.city = handleCourseDTO.city
         course.thumbnail = handleCourseDTO.thumbnail
-        logger.info("$ip USER ${user.idx} - PATCH\n$prevCourse\n${Gson().toJson(course)}")
         
         courseRepo.save(course)
+        logger.info("$ip USER ${user.idx} - PATCH\n$prevCourse\n${Gson().toJson(course)}")
     }
     
     override fun deleteCourse(idx: Long, ip: String, user: User) {
         val course: Course = courseRepo.findById(idx)
                 .orElseThrow { throw HttpClientErrorException(HttpStatus.NOT_FOUND, "해당 코스 없음.") }
         
-        logger.info("$ip USER ${user.idx} - DELETE\n${Gson().toJson(course)}")
         courseRepo.delete(course)
+        logger.info("$ip USER ${user.idx} - DELETE\n${Gson().toJson(course)}")
     }
     
     override fun getCourses(page: Int, size: Int, user: User): List<GetCourseRO> {

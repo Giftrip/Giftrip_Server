@@ -21,17 +21,17 @@ import javax.validation.constraints.Min
 @RestController
 @RequestMapping("/course")
 class CourseController {
-
+    
     @Autowired
     private lateinit var courseService: CourseServiceImpl
-
+    
     @PostMapping("/createCourse")
-    @ApiOperation(value = "코스 생성 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiOperation(value = "코스 생성 (관리자)", authorizations = [Authorization("Bearer Token")])
     fun createCourse(@RequestBody handleCourseDTO: HandleCourseDTO,
                      request: HttpServletRequest): Response {
         try {
             val user: User = ClientUtils.getAdmin(request)
-            courseService.createCourse(handleCourseDTO,  ClientUtils.getIp(request), user)
+            courseService.createCourse(handleCourseDTO, ClientUtils.getIp(request), user)
             return Response("생성 성공.")
         } catch (e: HttpClientErrorException) {
             throw e
@@ -40,9 +40,9 @@ class CourseController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @PatchMapping("/editCourse/{idx}")
-    @ApiOperation(value = "코스 수정 (관리자)", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation(value = "코스 수정 (관리자)", authorizations = [Authorization("Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = Response::class),
         ApiResponse(code = 404, message = "해당 코스 없음.", response = Response::class)
@@ -60,9 +60,9 @@ class CourseController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @DeleteMapping("/deleteCourse/{idx}")
-    @ApiOperation(value = "코스 삭제 (관리자)", authorizations = [Authorization(value="Bearer Token")])
+    @ApiOperation(value = "코스 삭제 (관리자)", authorizations = [Authorization("Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = Response::class),
         ApiResponse(code = 404, message = "해당 코스 없음.", response = Response::class)
@@ -79,9 +79,9 @@ class CourseController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @GetMapping("/getCourses")
-    @ApiOperation(value = "코스 목록 조회", authorizations = [Authorization(value="Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
+    @ApiOperation(value = "코스 목록 조회", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
     fun getCourse(@RequestParam(required = true) @Min(1) page: Int,
                   @RequestParam(required = true) @Min(1) size: Int,
                   request: HttpServletRequest): List<GetCourseRO> {
@@ -95,9 +95,9 @@ class CourseController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @GetMapping("/getCourse/{idx}")
-    @ApiOperation(value = "코스 조회", authorizations = [Authorization(value="Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
+    @ApiOperation(value = "코스 조회", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = GetCourseRO::class),
         ApiResponse(code = 404, message = "해당 코스 없음.", response = Response::class)
@@ -113,9 +113,9 @@ class CourseController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
     @GetMapping("/searchCourses")
-    @ApiOperation(value = "코스 목록 검색", authorizations = [Authorization(value="Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
+    @ApiOperation(value = "코스 목록 검색", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
     fun searchCourses(@RequestParam(required = true) @Min(1) page: Int,
                       @RequestParam(required = true) @Min(1) size: Int,
                       @RequestParam(value = "query", required = true) query: String, request: HttpServletRequest): List<GetCourseRO> {
@@ -129,5 +129,5 @@ class CourseController {
             throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
-
+    
 }

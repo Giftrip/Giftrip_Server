@@ -34,8 +34,8 @@ class NoticeServiceImpl : NoticeService {
         notice.title = handleNoticeDTO.title
         notice.content = handleNoticeDTO.content
         notice.thumbnail = handleNoticeDTO.thumbnail
-        logger.info("$ip USER ${user.idx} - CREATE\n${Gson().toJson(notice)}")
         noticeRepo.save(notice)
+        logger.info("$ip USER ${user.idx} - CREATE\n${Gson().toJson(notice)}")
     }
     
     override fun editNotice(handleNoticeDTO: HandleNoticeDTO, idx: Long, ip: String, user: User) {
@@ -47,8 +47,8 @@ class NoticeServiceImpl : NoticeService {
         notice.title = handleNoticeDTO.title
         notice.content = handleNoticeDTO.content
         notice.thumbnail = handleNoticeDTO.thumbnail
-        logger.info("$ip USER ${user.idx} - PATCH\n$prevNotice\n${Gson().toJson(notice)}")
         noticeRepo.save(notice)
+        logger.info("$ip USER ${user.idx} - PATCH\n$prevNotice\n${Gson().toJson(notice)}")
     }
     
     override fun deleteNotice(idx: Long, ip: String, user: User) {
@@ -57,8 +57,8 @@ class NoticeServiceImpl : NoticeService {
                     throw HttpClientErrorException(HttpStatus.NOT_FOUND, "글 없음.")
                 }
         
-        logger.info("$ip USER ${user.idx} - DELETE\n${Gson().toJson(notice)}")
         noticeRepo.delete(notice)
+        logger.info("$ip USER ${user.idx} - DELETE\n${Gson().toJson(notice)}")
     }
     
     override fun getNotices(page: Int, size: Int, user: User): GetNoticesRO {
