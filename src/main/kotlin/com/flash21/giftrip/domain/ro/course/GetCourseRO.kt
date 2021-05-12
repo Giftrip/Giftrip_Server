@@ -10,7 +10,7 @@ class GetCourseRO(course: Course, giftLog: GiftLog?) {
     val title: String = course.title
     val description: String = course.description
     val thumbnail: String = course.thumbnail
-    val location: String = course.location
+    val city: String = course.city
     val createdAt: Date = course.createdAt
     val updatedAt: Date = course.updatedAt
     val completed: Boolean = giftLog != null

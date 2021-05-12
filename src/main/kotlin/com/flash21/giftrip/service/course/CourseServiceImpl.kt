@@ -6,6 +6,9 @@ import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.repository.CourseRepo
 import com.flash21.giftrip.domain.repository.GiftLogRepo
 import com.flash21.giftrip.domain.ro.course.GetCourseRO
+import com.google.gson.Gson
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -21,35 +24,39 @@ class CourseServiceImpl: CourseService {
 
     @Autowired
     private lateinit var giftLogRepo: GiftLogRepo
+    
+    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     override fun createCourse(handleCourseDTO: HandleCourseDTO, ip: String, user: User) {
         val course: Course = Course()
 
         course.title = handleCourseDTO.title
         course.description = handleCourseDTO.description
-        course.location = handleCourseDTO.location
+        course.city = handleCourseDTO.city
         course.thumbnail = handleCourseDTO.thumbnail
-        course.user = user
-        course.ip = ip
-
+        logger.info("$ip ${user.idx} - CREATE\n${Gson().toJson(course)}")
+    
         courseRepo.save(course)
     }
 
-    override fun editCourse(handleCourseDTO: HandleCourseDTO, idx: Long) {
+    override fun editCourse(handleCourseDTO: HandleCourseDTO, idx: Long, ip: String, user: User) {
         val course: Course = courseRepo.findById(idx)
                 .orElseThrow { throw HttpClientErrorException(HttpStatus.NOT_FOUND, "해당 코스 없음.") }
+        val prevCourse: String = Gson().toJson(course)
         course.title = handleCourseDTO.title
         course.description = handleCourseDTO.description
-        course.location = handleCourseDTO.location
+        course.city = handleCourseDTO.city
         course.thumbnail = handleCourseDTO.thumbnail
-
+        logger.info("$ip ${user.idx} - PATCH\n$prevCourse\n${Gson().toJson(course)}")
+        
         courseRepo.save(course)
     }
 
-    override fun deleteCourse(idx: Long) {
+    override fun deleteCourse(idx: Long, ip: String, user: User) {
         val course: Course = courseRepo.findById(idx)
                 .orElseThrow { throw HttpClientErrorException(HttpStatus.NOT_FOUND, "해당 코스 없음.") }
-
+    
+        logger.info("$ip ${user.idx} - DELETE\n${Gson().toJson(course)}")
         courseRepo.delete(course)
     }
 

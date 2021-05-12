@@ -8,7 +8,9 @@ import com.flash21.giftrip.domain.repository.NoticeRepo
 import com.flash21.giftrip.domain.repository.NoticeViewRepo
 import com.flash21.giftrip.domain.ro.notice.GetNoticeRO
 import com.flash21.giftrip.domain.ro.notice.GetNoticesRO
-import org.modelmapper.ModelMapper
+import com.google.gson.Gson
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -25,31 +27,37 @@ class NoticeServiceImpl: NoticeService {
     @Autowired
     private lateinit var noticeViewRepo: NoticeViewRepo
 
+    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+
     override fun createNotice(handleNoticeDTO: HandleNoticeDTO, ip: String, user: User) {
         val notice: Notice = Notice()
         notice.title = handleNoticeDTO.title
         notice.content = handleNoticeDTO.content
         notice.thumbnail = handleNoticeDTO.thumbnail
-        notice.ip = ip
+        logger.info("$ip ${user.idx} - CREATE\n${Gson().toJson(notice)}")
         noticeRepo.save(notice)
     }
 
-    override fun editNotice(handleNoticeDTO: HandleNoticeDTO, idx: Long) {
+    override fun editNotice(handleNoticeDTO: HandleNoticeDTO, idx: Long, ip: String, user: User) {
         val notice: Notice = noticeRepo.findById(idx)
                 .orElseThrow {
                     throw HttpClientErrorException(HttpStatus.NOT_FOUND, "글 없음.")
                 }
+        val prevNotice: String = Gson().toJson(notice)
         notice.title = handleNoticeDTO.title
         notice.content = handleNoticeDTO.content
         notice.thumbnail = handleNoticeDTO.thumbnail
+        logger.info("$ip ${user.idx} - PATCH\n$prevNotice\n${Gson().toJson(notice)}")
         noticeRepo.save(notice)
     }
 
-    override fun deleteNotice(idx: Long) {
+    override fun deleteNotice(idx: Long, ip: String, user: User) {
         val notice: Notice = noticeRepo.findById(idx)
                 .orElseThrow {
                     throw HttpClientErrorException(HttpStatus.NOT_FOUND, "글 없음.")
                 }
+    
+        logger.info("$ip ${user.idx} - DELETE\n${Gson().toJson(notice)}")
         noticeRepo.delete(notice)
     }
 

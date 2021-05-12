@@ -2,7 +2,7 @@ package com.flash21.giftrip.controller
 
 import com.flash21.giftrip.domain.ro.file.FileUploadRO
 import com.flash21.giftrip.domain.ro.http.Response
-import com.flash21.giftrip.lib.GetUserByHeader
+import com.flash21.giftrip.lib.ClientUtils
 import com.flash21.giftrip.service.file.FileServiceImpl
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -42,7 +42,7 @@ class FileController {
     fun uploadFile(@RequestParam(value = "file", required = true) file: MultipartFile,
                    request: HttpServletRequest): FileUploadRO {
         try {
-            GetUserByHeader.getAdmin(request)
+            ClientUtils.getAdmin(request)
             if (file.isEmpty || (FilenameUtils.getExtension(file.originalFilename) != "png"
                             && FilenameUtils.getExtension(file.originalFilename) != "jpg"
                             && FilenameUtils.getExtension(file.originalFilename) != "jpeg"

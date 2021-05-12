@@ -15,7 +15,7 @@ class HandleCourseDTO {
 
     @NotBlank
     @Size(min = 1, max = 50)
-    val location: String = ""
+    val city: String = ""
 
     @NotBlank
     val thumbnail: String = ""

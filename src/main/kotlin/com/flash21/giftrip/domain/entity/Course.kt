@@ -28,20 +28,9 @@ class Course {
     @Column(nullable = false)
     var thumbnail: String = ""
 
-    // 코스 생성자
-    @JoinColumn(name = "user_idx")
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    var user: User? = null
-
-    // 생성자의 ip
-    @JsonIgnore
-    @Column(length = 20)
-    var ip: String? = null
-
     // 도시 명
     @Column(nullable = false, length = 50)
-    var location: String = ""
+    var city: String = ""
 
     // 생성 날짜
     @CreationTimestamp

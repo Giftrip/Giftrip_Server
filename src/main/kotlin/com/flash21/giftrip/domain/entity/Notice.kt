@@ -1,9 +1,6 @@
 package com.flash21.giftrip.domain.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.OnDelete
-import org.hibernate.annotations.OnDeleteAction
 import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
 import javax.persistence.*
@@ -16,12 +13,6 @@ class Notice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var idx: Long? = null
 
-    // 유저 순서
-    @JoinColumn(name = "user_idx")
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    var user: User? = null
-
     // 제목
     @Column(length = 50, nullable = false)
     var title: String = ""
@@ -33,11 +24,6 @@ class Notice {
     // 썸네일
     @Column(nullable = true)
     var thumbnail: String? = null
-
-    // 생성자의 ip
-    @JsonIgnore
-    @Column(length = 20)
-    var ip: String? = null
 
     // 생성 날짜
     @CreationTimestamp

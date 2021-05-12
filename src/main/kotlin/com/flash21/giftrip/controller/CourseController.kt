@@ -4,7 +4,7 @@ import com.flash21.giftrip.domain.dto.course.HandleCourseDTO
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.ro.course.GetCourseRO
 import com.flash21.giftrip.domain.ro.http.Response
-import com.flash21.giftrip.lib.GetUserByHeader
+import com.flash21.giftrip.lib.ClientUtils
 import com.flash21.giftrip.service.course.CourseServiceImpl
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -30,9 +30,8 @@ class CourseController {
     fun createCourse(@RequestBody handleCourseDTO: HandleCourseDTO,
                      request: HttpServletRequest): Response {
         try {
-            val user: User = GetUserByHeader.getAdmin(request)
-            val ip: String? = request.getHeader("X-FORWARDED-FOR")
-            courseService.createCourse(handleCourseDTO, ip ?: request.remoteAddr, user)
+            val user: User = ClientUtils.getAdmin(request)
+            courseService.createCourse(handleCourseDTO,  ClientUtils.getIp(request), user)
             return Response("생성 성공.")
         } catch (e: HttpClientErrorException) {
             throw e
@@ -51,8 +50,8 @@ class CourseController {
     fun editNotice(@RequestBody handleCourseDTO: HandleCourseDTO,
                    @PathVariable idx: Long, request: HttpServletRequest): Response {
         try {
-            GetUserByHeader.getAdmin(request)
-            courseService.editCourse(handleCourseDTO, idx)
+            val user: User = ClientUtils.getAdmin(request)
+            courseService.editCourse(handleCourseDTO, idx, ClientUtils.getIp(request), user)
             return Response("수정 성공.")
         } catch (e: HttpClientErrorException) {
             throw e
@@ -70,8 +69,8 @@ class CourseController {
     ])
     fun deleteNotice(@PathVariable idx: Long, request: HttpServletRequest): Response {
         try {
-            GetUserByHeader.getAdmin(request)
-            courseService.deleteCourse(idx)
+            val user: User = ClientUtils.getAdmin(request)
+            courseService.deleteCourse(idx, ClientUtils.getIp(request), user)
             return Response("삭제 성공.")
         } catch (e: HttpClientErrorException) {
             throw e
@@ -87,7 +86,7 @@ class CourseController {
                   @RequestParam(required = true) @Min(1) size: Int,
                   request: HttpServletRequest): List<GetCourseRO> {
         try {
-            val user: User = GetUserByHeader.get(request)
+            val user: User = ClientUtils.getUser(request)
             return courseService.getCourses(page, size, user)
         } catch (e: HttpClientErrorException) {
             throw e
@@ -105,7 +104,7 @@ class CourseController {
     ])
     fun getCourse(@PathVariable idx: Long, request: HttpServletRequest): GetCourseRO {
         try {
-            val user: User = GetUserByHeader.get(request)
+            val user: User = ClientUtils.getUser(request)
             return courseService.getCourse(idx, user)
         } catch (e: HttpClientErrorException) {
             throw e
@@ -121,7 +120,7 @@ class CourseController {
                       @RequestParam(required = true) @Min(1) size: Int,
                       @RequestParam(value = "query", required = true) query: String, request: HttpServletRequest): List<GetCourseRO> {
         try {
-            val user: User = GetUserByHeader.get(request)
+            val user: User = ClientUtils.getUser(request)
             return courseService.searchCourses(page, size, query, user)
         } catch (e: HttpClientErrorException) {
             throw e
