@@ -134,10 +134,10 @@ class CourseController {
     }
     
     @GetMapping("/getRecentlyComplete/{idx}")
-    @ApiOperation(value = "공지 조회", authorizations = [Authorization("Bearer Token")])
+    @ApiOperation(value = "최근 완주자 조회", authorizations = [Authorization("Bearer Token")])
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = GetNoticeRO::class),
-        ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
+        ApiResponse(code = 404, message = "해당 코스 없음.", response = Response::class)
     ])
     fun getRecentlyComplete(@PathVariable idx: Long, request: HttpServletRequest): List<GetRecentlyCompleteRO> {
         try {

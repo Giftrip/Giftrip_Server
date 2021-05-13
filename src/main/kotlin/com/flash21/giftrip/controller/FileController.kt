@@ -12,6 +12,7 @@ import org.apache.commons.io.FilenameUtils
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.Resource
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -85,6 +86,54 @@ class FileController {
         
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
+                .body(resource)
+    }
+    
+    @GetMapping("/download/errorLog")
+    @ApiOperation("에러 로그 다운로드 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "성공.", response = FileUploadRO::class),
+        ApiResponse(code = 404, message = "로그가 없음.", response = Response::class)
+    ])
+    fun downloadErrorLog(request: HttpServletRequest): ResponseEntity<*>? {
+        ClientUtils.getAdmin(request)
+        val resource: Resource = fileService.loadDownloadFileAsResource("error.log")
+        var contentType: String? = null
+        contentType = try {
+            request.servletContext.getMimeType(resource.file.absolutePath)
+        } catch (ex: IOException) {
+            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
+        }
+        if (contentType == null) {
+            contentType = "application/octet-stream"
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.filename + "\"")
+                .body(resource)
+    }
+    
+    @GetMapping("/download/adminLog")
+    @ApiOperation("관리자 로그 다운로드 (관리자)", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "성공.", response = FileUploadRO::class),
+        ApiResponse(code = 404, message = "로그가 없음.", response = Response::class)
+    ])
+    fun downloadAdminLog(request: HttpServletRequest): ResponseEntity<*>? {
+        ClientUtils.getAdmin(request)
+        val resource: Resource = fileService.loadDownloadFileAsResource("admin_log.log")
+        var contentType: String? = null
+        contentType = try {
+            request.servletContext.getMimeType(resource.file.absolutePath)
+        } catch (ex: IOException) {
+            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
+        }
+        if (contentType == null) {
+            contentType = "application/octet-stream"
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.filename + "\"")
                 .body(resource)
     }
     

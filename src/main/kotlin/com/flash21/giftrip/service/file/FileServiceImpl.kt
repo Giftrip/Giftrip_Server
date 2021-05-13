@@ -20,6 +20,8 @@ class FileServiceImpl : FileService {
     
     private var fileStorageLocation: Path = Paths.get("static/").toAbsolutePath().normalize()
     
+    private var downloadFileStorageLocation: Path = Paths.get("static/logs/").toAbsolutePath().normalize()
+    
     @Autowired
     fun uploadServiceImpl() {
         Files.createDirectories(fileStorageLocation)
@@ -50,6 +52,20 @@ class FileServiceImpl : FileService {
         } catch (ex: MalformedURLException) {
             throw HttpClientErrorException(HttpStatus.NOT_FOUND, "없는 파일.")
         } catch (e: NullPointerException) {
+            throw HttpClientErrorException(HttpStatus.NOT_FOUND, "없는 파일.")
+        }
+    }
+    
+    override fun loadDownloadFileAsResource(fileName: String): Resource {
+        return try {
+            val filePath = downloadFileStorageLocation.resolve(fileName).normalize()
+            val resource: Resource = UrlResource(filePath.toUri())
+            if (resource.exists()) {
+                resource
+            } else {
+                throw HttpClientErrorException(HttpStatus.NOT_FOUND, "없는 파일.")
+            }
+        } catch (ex: MalformedURLException) {
             throw HttpClientErrorException(HttpStatus.NOT_FOUND, "없는 파일.")
         }
     }
