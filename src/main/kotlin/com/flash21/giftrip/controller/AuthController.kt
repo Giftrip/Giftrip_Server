@@ -1,8 +1,11 @@
 package com.flash21.giftrip.controller
 
-import com.flash21.giftrip.domain.dto.auth.*
-import com.flash21.giftrip.domain.entity.PhoneAuth
-import com.flash21.giftrip.domain.entity.PhonePwAuth
+import com.flash21.giftrip.domain.dto.auth.ChangePwByCodeDTO
+import com.flash21.giftrip.domain.dto.auth.LoginDTO
+import com.flash21.giftrip.domain.dto.auth.RefreshDTO
+import com.flash21.giftrip.domain.dto.auth.RegisterDTO
+import com.flash21.giftrip.domain.ro.auth.PhoneAuthCodeRO
+import com.flash21.giftrip.domain.ro.auth.PhonePwAuthCodeRO
 import com.flash21.giftrip.domain.ro.auth.TokenRO
 import com.flash21.giftrip.domain.ro.http.Response
 import com.flash21.giftrip.service.auth.AuthServiceImpl
@@ -58,16 +61,16 @@ class AuthController {
         }
     }
     
-    @GetMapping("/getAuthCode")
-    @ApiOperation(value = "휴대폰 인증 생성 및 코드 조회")
+    @PostMapping("/createAuthCode")
+    @ApiOperation(value = "휴대폰 인증 생성")
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "성공.", response = Response::class),
+        ApiResponse(code = 200, message = "성공.", response = PhoneAuthCodeRO::class),
         ApiResponse(code = 409, message = "이미 가입된 전번.", response = Response::class),
         ApiResponse(code = 429, message = "아직 발급 불가.", response = Response::class)
     ])
-    fun getAuthCode(@RequestParam(required = true) @Size(min = 1, max = 20) phoneNumber: String): PhoneAuth {
+    fun createAuthCode(@RequestParam(required = true) @Size(min = 1, max = 20) phoneNumber: String): PhoneAuthCodeRO {
         try {
-            return authService.getAuthCode(phoneNumber)
+            return authService.createAuthCode(phoneNumber)
         } catch (e: HttpClientErrorException) {
             throw e
         } catch (e: Exception) {
@@ -102,13 +105,13 @@ class AuthController {
     @GetMapping("/getPwAuthCode")
     @ApiOperation(value = "비밀번호 변경 휴대폰 인증 생성 및 코드 조회 (비밀번호 찾기)")
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "성공.", response = PhoneAuth::class),
+        ApiResponse(code = 200, message = "성공.", response = PhonePwAuthCodeRO::class),
         ApiResponse(code = 404, message = "해당 전화번호 유저가 없음.", response = Response::class),
         ApiResponse(code = 429, message = "아직 발급 불가.", response = Response::class)
     ])
-    fun getPwAuthCode(@RequestParam(required = true) @Size(min = 1, max = 20) phoneNumber: String): PhonePwAuth {
+    fun getPwAuthCode(@RequestParam(required = true) @Size(min = 1, max = 20) phoneNumber: String): PhonePwAuthCodeRO {
         try {
-            return authService.getPwAuthCode(phoneNumber)
+            return authService.createPwAuthCode(phoneNumber)
         } catch (e: HttpClientErrorException) {
             throw e
         } catch (e: Exception) {

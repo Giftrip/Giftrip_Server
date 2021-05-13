@@ -14,8 +14,6 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import io.swagger.annotations.Authorization
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -30,8 +28,6 @@ class SpotController {
     
     @Autowired
     private lateinit var spotService: SpotServiceImpl
-    
-    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
     
     @PostMapping("/createSpot")
     @ApiOperation(value = "스팟 생성 (관리자)", authorizations = [Authorization("Bearer Token")])

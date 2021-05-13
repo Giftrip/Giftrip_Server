@@ -10,6 +10,8 @@ import com.flash21.giftrip.domain.repository.PhoneAuthRepo
 import com.flash21.giftrip.domain.repository.PhonePwAuthRepo
 import com.flash21.giftrip.domain.repository.UserRepo
 import com.flash21.giftrip.domain.ro.auth.AuthTokenModel
+import com.flash21.giftrip.domain.ro.auth.PhoneAuthCodeRO
+import com.flash21.giftrip.domain.ro.auth.PhonePwAuthCodeRO
 import com.flash21.giftrip.domain.ro.auth.TokenRO
 import com.flash21.giftrip.enums.JwtAuth
 import com.flash21.giftrip.lib.GenerateCode
@@ -55,7 +57,7 @@ class AuthServiceImpl : AuthService {
         return jwtService.refreshToken(refreshToken)
     }
     
-    override fun getAuthCode(phoneNumber: String): PhoneAuth {
+    override fun createAuthCode(phoneNumber: String): PhoneAuthCodeRO {
         userRepo.findByPhoneNumber(phoneNumber)
                 .ifPresent {
                     throw HttpClientErrorException(HttpStatus.CONFLICT, "이미 가입된 전화번호.")
@@ -72,9 +74,11 @@ class AuthServiceImpl : AuthService {
         phoneAuth.phoneNumber = phoneNumber
         phoneAuth.reset(GenerateCode.execute())
         
+        // TODO 인증번호 발급
+        
         phoneAuthRepo.save(phoneAuth)
         
-        return phoneAuth
+        return PhoneAuthCodeRO(phoneAuth)
     }
     
     override fun register(registerDTO: RegisterDTO) {
@@ -95,7 +99,7 @@ class AuthServiceImpl : AuthService {
         userRepo.save(user)
     }
     
-    override fun getPwAuthCode(phoneNumber: String): PhonePwAuth {
+    override fun createPwAuthCode(phoneNumber: String): PhonePwAuthCodeRO {
         userRepo.findByPhoneNumber(phoneNumber)
                 .orElseThrow {
                     throw HttpClientErrorException(HttpStatus.NOT_FOUND, "해당 전화번호 유저가 없음.")
@@ -112,9 +116,11 @@ class AuthServiceImpl : AuthService {
         phonePwAuth.phoneNumber = phoneNumber
         phonePwAuth.reset(GenerateCode.execute())
         
+        // TODO 인증번호 발급
+        
         phonePwAuthRepo.save(phonePwAuth)
         
-        return phonePwAuth
+        return PhonePwAuthCodeRO(phonePwAuth)
     }
     
     override fun changePwByCode(changePwByCodeDTO: ChangePwByCodeDTO) {

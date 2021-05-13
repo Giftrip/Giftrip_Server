@@ -5,9 +5,8 @@ import com.flash21.giftrip.domain.entity.Course
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.repository.CourseRepo
 import com.flash21.giftrip.domain.repository.GiftLogRepo
-import com.flash21.giftrip.domain.ro.course.GetCourseRO
-import com.flash21.giftrip.domain.ro.course.GetCoursesRO
-import com.flash21.giftrip.domain.ro.course.GetRecentlyCompleteRO
+import com.flash21.giftrip.domain.repository.SpotRepo
+import com.flash21.giftrip.domain.ro.course.*
 import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -26,6 +25,9 @@ class CourseServiceImpl : CourseService {
     
     @Autowired
     private lateinit var giftLogRepo: GiftLogRepo
+    
+    @Autowired
+    private lateinit var spotRepo: SpotRepo
     
     private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
     
@@ -76,11 +78,19 @@ class CourseServiceImpl : CourseService {
         return GetCoursesRO(result, list)
     }
     
-    override fun getCourse(idx: Long, user: User): GetCourseRO {
+    override fun getCourse(idx: Long, user: User): GetCourseInfoRO {
         val course: Course = courseRepo.findById(idx)
                 .orElseThrow { throw HttpClientErrorException(HttpStatus.NOT_FOUND, "해당 코스 없음.") }
         
-        return GetCourseRO(course, giftLogRepo.findByUserAndCourse(user, course))
+        val spotList = spotRepo.findAllByCourseIdx(course.idx!!)
+        val result: MutableList<GetCourseLocationRO> = mutableListOf()
+        
+        spotList.map {
+            result.add(GetCourseLocationRO(it))
+        }
+        
+        
+        return GetCourseInfoRO(GetCourseRO(course, giftLogRepo.findByUserAndCourse(user, course)), result)
     }
     
     override fun searchCourses(page: Int, size: Int, query: String, user: User): GetCoursesRO {
