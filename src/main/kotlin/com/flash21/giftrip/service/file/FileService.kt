@@ -6,4 +6,5 @@ import org.springframework.web.multipart.MultipartFile
 interface FileService {
     fun storeFile(file: MultipartFile): String
     fun loadFileAsResource(fileName: String): Resource
+    fun loadDownloadFileAsResource(fileName: String): Resource
 }

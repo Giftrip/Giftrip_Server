@@ -8,7 +8,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver
 
 @Configuration
 class JwtFilterConfig(private val handlerExceptionResolver: HandlerExceptionResolver) {
-
+    
     @Bean
     fun authFilter(): FilterRegistrationBean<JwtAuthenticationFilter> {
         val registrationBean: FilterRegistrationBean<JwtAuthenticationFilter> = FilterRegistrationBean<JwtAuthenticationFilter>()
@@ -18,8 +18,9 @@ class JwtFilterConfig(private val handlerExceptionResolver: HandlerExceptionReso
         registrationBean.addUrlPatterns("/notice/*")
         registrationBean.addUrlPatterns("/course/*")
         registrationBean.addUrlPatterns("/spot/*")
+        registrationBean.addUrlPatterns("/file/download/*")
         registrationBean.order = 2
-
+        
         return registrationBean
     }
 }
