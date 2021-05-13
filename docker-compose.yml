@@ -15,8 +15,6 @@ services:
     build: .
     environment:
       SPRING_DATASOURCE_URL: jdbc:mariadb://database:3306/giftrip?useUnicode=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1234
     volumes:
       - type: bind
         source: /root/giftrip/static
