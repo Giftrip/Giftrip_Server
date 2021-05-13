@@ -17,7 +17,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mariadb://database:3306/giftrip?useUnicode=true
     volumes:
       - type: bind
-        source: /root/giftrip/static
+        source: /root/giftrip_vm/static
         target: /static
     ports:
       - 8080:8080
