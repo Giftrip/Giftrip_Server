@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.multipart.MultipartException
+import javax.validation.ConstraintViolationException
 
 @ControllerAdvice
 class GlobalExceptionHandler {
@@ -62,6 +64,25 @@ class GlobalExceptionHandler {
     protected fun handleMultipartException(e: MultipartException): ResponseEntity<Response> {
         val data = Response("검증 오류.")
         return ResponseEntity<Response>(data, HttpStatus.BAD_REQUEST)
+    }
+    
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    protected fun handleMissingServletRequestParameterException(e: MissingServletRequestParameterException): ResponseEntity<Response> {
+        val data = Response("검증 오류.")
+        return ResponseEntity<Response>(data, HttpStatus.BAD_REQUEST)
+    }
+    
+    @ExceptionHandler(ConstraintViolationException::class)
+    protected fun handleConstraintViolationException(e: ConstraintViolationException): ResponseEntity<Response> {
+        val data = Response(e.message ?: "검증 오류.")
+        return ResponseEntity<Response>(data, HttpStatus.BAD_REQUEST)
+    }
+    
+    @ExceptionHandler(Exception::class)
+    protected fun handleException(e: Exception): ResponseEntity<Response> {
+        e.printStackTrace()
+        val data = Response("서버 오류.")
+        return ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR)
     }
     
 }

@@ -12,15 +12,14 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import io.swagger.annotations.Authorization
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.HttpServerErrorException
 import javax.servlet.http.HttpServletRequest
 import javax.validation.constraints.Min
 
 @RestController
 @RequestMapping("/notice")
+@Validated
 class NoticeController {
     
     @Autowired
@@ -30,16 +29,9 @@ class NoticeController {
     @ApiOperation(value = "공지 생성 (관리자)", authorizations = [Authorization("Bearer Token")])
     fun createNotice(@RequestBody handleNoticeDTO: HandleNoticeDTO,
                      request: HttpServletRequest): Response {
-        try {
-            val user: User = ClientUtils.getAdmin(request)
-            noticeService.createNotice(handleNoticeDTO, ClientUtils.getIp(request), user)
-            return Response("생성 성공.")
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getAdmin(request)
+        noticeService.createNotice(handleNoticeDTO, ClientUtils.getIp(request), user)
+        return Response("생성 성공.")
     }
     
     @PatchMapping("/editNotice/{idx}")
@@ -50,16 +42,9 @@ class NoticeController {
     ])
     fun editNotice(@RequestBody handleNoticeDTO: HandleNoticeDTO,
                    @PathVariable idx: Long, request: HttpServletRequest): Response {
-        try {
-            val user: User = ClientUtils.getAdmin(request)
-            noticeService.editNotice(handleNoticeDTO, idx, ClientUtils.getIp(request), user)
-            return Response("수정 성공.")
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getAdmin(request)
+        noticeService.editNotice(handleNoticeDTO, idx, ClientUtils.getIp(request), user)
+        return Response("수정 성공.")
     }
     
     @DeleteMapping("/deleteNotice/{idx}")
@@ -69,16 +54,9 @@ class NoticeController {
         ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
     ])
     fun deleteNotice(@PathVariable idx: Long, request: HttpServletRequest): Response {
-        try {
-            val user: User = ClientUtils.getAdmin(request)
-            noticeService.deleteNotice(idx, ClientUtils.getIp(request), user)
-            return Response("삭제 성공.")
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getAdmin(request)
+        noticeService.deleteNotice(idx, ClientUtils.getIp(request), user)
+        return Response("삭제 성공.")
     }
     
     @GetMapping("/getNotices")
@@ -86,15 +64,8 @@ class NoticeController {
     fun getNotices(@RequestParam(required = true) @Min(1) page: Int,
                    @RequestParam(required = true) @Min(1) size: Int,
                    request: HttpServletRequest): GetNoticesRO {
-        try {
-            val user: User = ClientUtils.getUser(request)
-            return noticeService.getNotices(page, size, user)
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getUser(request)
+        return noticeService.getNotices(page, size, user)
     }
     
     @GetMapping("/getNotice/{idx}")
@@ -104,15 +75,8 @@ class NoticeController {
         ApiResponse(code = 404, message = "해당 글 없음.", response = Response::class)
     ])
     fun getNotice(@PathVariable idx: Long, request: HttpServletRequest): GetNoticeRO {
-        try {
-            val user: User = ClientUtils.getUser(request)
-            return noticeService.getNotice(idx, user)
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getUser(request)
+        return noticeService.getNotice(idx, user)
     }
     
 }

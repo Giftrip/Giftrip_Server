@@ -15,15 +15,14 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import io.swagger.annotations.Authorization
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.HttpServerErrorException
 import javax.servlet.http.HttpServletRequest
 import javax.validation.constraints.Min
 
 @RestController
 @RequestMapping("/spot")
+@Validated
 class SpotController {
     
     @Autowired
@@ -37,16 +36,9 @@ class SpotController {
     ])
     fun createSpot(@RequestBody handleSpotDTO: HandleSpotDTO,
                    request: HttpServletRequest): Response {
-        try {
-            val user: User = ClientUtils.getAdmin(request)
-            spotService.createSpot(handleSpotDTO, ClientUtils.getIp(request), user)
-            return Response("생성 성공.")
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getAdmin(request)
+        spotService.createSpot(handleSpotDTO, ClientUtils.getIp(request), user)
+        return Response("생성 성공.")
     }
     
     @PatchMapping("/editSpot/{idx}")
@@ -57,16 +49,9 @@ class SpotController {
     ])
     fun editSpot(@RequestBody handleSpotDTO: HandleSpotDTO,
                  @PathVariable idx: Long, request: HttpServletRequest): Response {
-        try {
-            val user: User = ClientUtils.getAdmin(request)
-            spotService.editSpot(handleSpotDTO, idx, ClientUtils.getIp(request), user)
-            return Response("수정 성공.")
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getAdmin(request)
+        spotService.editSpot(handleSpotDTO, idx, ClientUtils.getIp(request), user)
+        return Response("수정 성공.")
     }
     
     @DeleteMapping("/deleteSpot/{idx}")
@@ -76,16 +61,9 @@ class SpotController {
         ApiResponse(code = 404, message = "해당 스팟 또는 코스 없음.", response = Response::class)
     ])
     fun deleteSpot(@PathVariable idx: Long, request: HttpServletRequest): Response {
-        try {
-            val user: User = ClientUtils.getAdmin(request)
-            spotService.deleteSpot(idx, ClientUtils.getIp(request), user)
-            return Response("삭제 성공.")
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getAdmin(request)
+        spotService.deleteSpot(idx, ClientUtils.getIp(request), user)
+        return Response("삭제 성공.")
     }
     
     
@@ -95,15 +73,8 @@ class SpotController {
                  @RequestParam(required = true) @Min(1) size: Int,
                  @RequestParam(required = true) courseIdx: Long,
                  request: HttpServletRequest): GetSpotsRO {
-        try {
-            val user: User = ClientUtils.getUser(request)
-            return spotService.getSpots(page, size, courseIdx, user)
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getUser(request)
+        return spotService.getSpots(page, size, courseIdx, user)
     }
     
     @GetMapping("/getSpot/{idx}")
@@ -113,15 +84,8 @@ class SpotController {
         ApiResponse(code = 404, message = "해당 스팟 없음.", response = Response::class)
     ])
     fun getSpot(@PathVariable idx: Long, request: HttpServletRequest): GetSpotRO {
-        try {
-            val user: User = ClientUtils.getUser(request)
-            return spotService.getSpot(idx, user)
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getUser(request)
+        return spotService.getSpot(idx, user)
     }
     
     @GetMapping("/getQuizByNfc/{idx}")
@@ -133,15 +97,8 @@ class SpotController {
     ])
     fun getQuizByNfc(@PathVariable idx: Long, @RequestParam(required = true) nfcCode: String,
                      request: HttpServletRequest): GetQuizRO {
-        try {
-            val user: User = ClientUtils.getUser(request)
-            return spotService.getQuizByNfc(idx, nfcCode, user)
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getUser(request)
+        return spotService.getQuizByNfc(idx, nfcCode, user)
     }
     
     @PostMapping("/completeQuiz/{idx}")
@@ -153,15 +110,8 @@ class SpotController {
     ])
     fun completeQuiz(@PathVariable idx: Long, @RequestBody completeQuizDTO: CompleteQuizDTO,
                      request: HttpServletRequest): CompleteQuizRO {
-        try {
-            val user: User = ClientUtils.getUser(request)
-            return spotService.completeQuiz(idx, completeQuizDTO.nfcCode, completeQuizDTO.answer, user)
-        } catch (e: HttpClientErrorException) {
-            throw e
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
-        }
+        val user: User = ClientUtils.getUser(request)
+        return spotService.completeQuiz(idx, completeQuizDTO.nfcCode, completeQuizDTO.answer, user)
     }
     
 }
