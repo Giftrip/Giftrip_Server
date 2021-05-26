@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest
  */
 @RestController
 @RequestMapping("/file")
+@Validated
 class FileController {
     
     @Autowired
@@ -51,13 +53,8 @@ class FileController {
                 throw HttpClientErrorException(HttpStatus.BAD_REQUEST, "검증 오류.")
             }
             return FileUploadRO(fileService.storeFile(file))
-        } catch (e: HttpClientErrorException) {
-            throw e
         } catch (e: SizeLimitExceededException) {
             throw HttpClientErrorException(HttpStatus.BAD_REQUEST, "너무 큰 용량.")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.")
         }
     }
     
