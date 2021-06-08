@@ -1,13 +1,16 @@
 package com.flash21.giftrip.domain.ro.user
 
+import com.flash21.giftrip.domain.entity.User
+import com.flash21.giftrip.lib.ClientUtils
+import java.net.URL
 import java.util.*
 
-class GetMyInfoRO {
-    var idx: Long? = null
-    var name: String = ""
-    var phoneNumber: String = ""
-    var profileImage: String? = null
-    var birth: Date = Date()
-    var admin: Boolean = false
-    var createdAt: Date = Date()
+class GetMyInfoRO(user: User) {
+    var idx: Long? = user.idx
+    var name: String = user.name ?: ""
+    var phoneNumber: String = user.phoneNumber ?: ""
+    var profileImage: URL? = if (user.profileImage == null) null else ClientUtils.getImage(user.profileImage!!)
+    var birth: Date = user.birth
+    var admin: Boolean = user.admin
+    var createdAt: Date = user.createdAt
 }

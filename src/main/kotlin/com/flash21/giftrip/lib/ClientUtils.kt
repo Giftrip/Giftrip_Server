@@ -4,6 +4,7 @@ import com.flash21.giftrip.domain.entity.User
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
+import java.net.URL
 import javax.servlet.http.HttpServletRequest
 
 class ClientUtils {
@@ -48,6 +49,20 @@ class ClientUtils {
             }
             
             return ip
+        }
+        
+        fun getImage(resource: String): URL {
+            return URL("http://210.114.22.183:8080/file/getImage/$resource")
+        }
+        
+        fun getImages(resource: List<String>): List<URL> {
+            val urls: MutableList<URL> = mutableListOf()
+            
+            resource.map {
+                urls.add(this.getImage(it))
+            }
+            
+            return urls
         }
     }
     
