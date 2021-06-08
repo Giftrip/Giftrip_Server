@@ -44,11 +44,11 @@ class JwtServiceImpl : JwtService {
         
         secretKey = when (authType) {
             JwtAuth.ACCESS -> {
-                expiredAt = Date(expiredAt.time + DateConstant().MILLISECONDS_FOR_A_HOUR * 1)
+                expiredAt = Date(expiredAt.time + DateConstant().MILLISECONDS_FOR_A_MINUTE * 30)
                 secretAccessKey
             }
             JwtAuth.REFRESH -> {
-                expiredAt = Date(expiredAt.time + DateConstant().MILLISECONDS_FOR_A_HOUR * 24 * 7)
+                expiredAt = Date(expiredAt.time + DateConstant().MILLISECONDS_FOR_A_HOUR * 24 * 7 * 2)
                 secretRefreshKey
             }
             else -> {
@@ -154,7 +154,7 @@ class JwtServiceImpl : JwtService {
             
             val exp: Date = claims.get("exp", Date::class.java)
             
-            if (exp.time - Date().time <= DateConstant().MILLISECONDS_FOR_A_HOUR * 3) {
+            if (exp.time - Date().time <= DateConstant().MILLISECONDS_FOR_A_HOUR * 24 * 3) {
                 newRefreshToken = createToken(user, JwtAuth.REFRESH)
             }
             
