@@ -36,12 +36,12 @@ class FileController {
     private lateinit var fileService: FileServiceImpl
     
     @PostMapping("/upload")
-    @ApiOperation("파일 업로드", authorizations = [Authorization(value = "Bearer Token")])
+    @ApiOperation("파일 업로드", authorizations = [Authorization(value = "Bearer Token")], consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = FileUploadRO::class),
         ApiResponse(code = 400, message = "확장자 오류, 크기 오류, 검증오류", response = Response::class)
     ])
-    fun uploadFile(@RequestParam(value = "file", required = true) file: MultipartFile,
+    fun uploadFile(@RequestPart(value = "file", required = true) file: MultipartFile,
                    request: HttpServletRequest): FileUploadRO {
         try {
             ClientUtils.getUser(request)
