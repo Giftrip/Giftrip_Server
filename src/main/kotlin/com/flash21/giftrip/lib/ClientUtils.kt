@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
 import java.net.URL
+import java.net.URLEncoder
 import javax.servlet.http.HttpServletRequest
 
 class ClientUtils {
@@ -52,7 +53,7 @@ class ClientUtils {
         }
         
         fun getImage(resource: String): URL {
-            return URL("http://210.114.22.183:8080/file/getImage/$resource")
+            return URL(URLEncoder.encode("http://210.114.22.183:8080/file/getImage/$resource", "utf-8"))
         }
         
         fun getImages(resource: List<String>): List<URL> {
