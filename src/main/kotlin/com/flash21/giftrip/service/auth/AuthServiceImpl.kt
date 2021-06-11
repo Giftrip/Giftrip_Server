@@ -81,7 +81,7 @@ class AuthServiceImpl : AuthService {
         return PhoneAuthCodeRO(phoneAuth)
     }
     
-    override fun register(registerDTO: RegisterDTO) {
+    override fun register(registerDTO: RegisterDTO): User {
         val phoneAuth: PhoneAuth = phoneAuthRepo
                 .findByPhoneNumberAndCode(registerDTO.phoneNumber, registerDTO.code)
                 .orElseThrow {
@@ -97,6 +97,8 @@ class AuthServiceImpl : AuthService {
         
         phoneAuthRepo.delete(phoneAuth)
         userRepo.save(user)
+        
+        return user
     }
     
     override fun createPwAuthCode(phoneNumber: String): PhonePwAuthCodeRO {

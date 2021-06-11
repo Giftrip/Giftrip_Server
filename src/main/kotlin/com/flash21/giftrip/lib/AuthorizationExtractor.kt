@@ -16,7 +16,7 @@ class AuthorizationExtractor {
             while (headers.hasMoreElements()) {
                 val value: String = headers.nextElement()
                 if (value.toLowerCase().startsWith(type.toLowerCase())) {
-                    return value.substring(type.length).trim()
+                    return value.replace(type, "").trim()
                 }
             }
             

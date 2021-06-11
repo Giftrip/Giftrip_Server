@@ -54,7 +54,7 @@ class GlobalExceptionHandler {
         return ResponseEntity<Response>(data, HttpStatus.BAD_REQUEST)
     }
     
-    @ExceptionHandler(javax.naming.SizeLimitExceededException::class)
+    @ExceptionHandler(SizeLimitExceededException::class)
     protected fun handleSizeLimitExceededException(e: SizeLimitExceededException): ResponseEntity<Response> {
         val data = Response("너무 크기가 큼.")
         return ResponseEntity(data, HttpStatus.BAD_REQUEST)
