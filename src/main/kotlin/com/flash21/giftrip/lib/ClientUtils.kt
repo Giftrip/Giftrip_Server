@@ -52,7 +52,7 @@ class ClientUtils {
         }
         
         fun getImage(resource: String): String {
-            return URLEncoder.encode("http://210.114.22.183:8080/file/getImage/$resource", "utf-8")
+            return "http://210.114.22.183:8080/file/getImage/${URLEncoder.encode(resource, "utf-8")}"
         }
         
         fun getImages(resource: List<String>): List<String> {
