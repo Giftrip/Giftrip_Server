@@ -3,7 +3,6 @@ package com.flash21.giftrip.controller
 import com.flash21.giftrip.domain.dto.course.HandleCourseDTO
 import com.flash21.giftrip.domain.entity.User
 import com.flash21.giftrip.domain.ro.course.GetCourseInfoRO
-import com.flash21.giftrip.domain.ro.course.GetCourseRO
 import com.flash21.giftrip.domain.ro.course.GetCoursesRO
 import com.flash21.giftrip.domain.ro.course.GetRecentlyCompleteListRO
 import com.flash21.giftrip.domain.ro.http.Response
@@ -65,7 +64,7 @@ class CourseController {
     @GetMapping("/getCourse/{idx}")
     @ApiOperation(value = "코스 조회", authorizations = [Authorization("Bearer Token")], notes = "completedAt은 미완료시 null로 줌.")
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "성공.", response = GetCourseRO::class),
+        ApiResponse(code = 200, message = "성공.", response = GetCourseInfoRO::class),
         ApiResponse(code = 404, message = "해당 코스 없음.", response = Response::class)
     ])
     fun getCourse(@PathVariable idx: Long, request: HttpServletRequest): GetCourseInfoRO {

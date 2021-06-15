@@ -29,7 +29,8 @@ class SpotController {
     private lateinit var spotService: SpotServiceImpl
     
     @PostMapping("/createSpot")
-    @ApiOperation(value = "스팟 생성 (관리자)", authorizations = [Authorization("Bearer Token")])
+    @ApiOperation(value = "스팟 생성 (관리자)", authorizations = [Authorization("Bearer Token")],
+            notes = "NFC 코드는 고유한 번호로 자동으로 부여.")
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "성공.", response = Response::class),
         ApiResponse(code = 404, message = "해당 스팟 또는 코스 없음.", response = Response::class)

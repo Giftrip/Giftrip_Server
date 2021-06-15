@@ -13,6 +13,7 @@ import com.flash21.giftrip.domain.ro.spot.CompleteQuizRO
 import com.flash21.giftrip.domain.ro.spot.GetQuizRO
 import com.flash21.giftrip.domain.ro.spot.GetSpotRO
 import com.flash21.giftrip.domain.ro.spot.GetSpotsRO
+import com.flash21.giftrip.lib.GenerateCode
 import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -58,7 +59,7 @@ class SpotServiceImpl : SpotService {
         spot.quiz = handleSpotDTO.quiz
         spot.youtube = handleSpotDTO.youtube
         spot.thumbnails = handleSpotDTO.thumbnails
-        spot.nfcCode = handleSpotDTO.nfcCode
+        spot.nfcCode = GenerateCode.execute(100)
         
         spotRepo.save(spot)
         logger.info("$ip USER ${user.idx} - CREATE\n${Gson().toJson(spot)}")
@@ -86,7 +87,6 @@ class SpotServiceImpl : SpotService {
         spot.quiz = handleSpotDTO.quiz
         spot.youtube = handleSpotDTO.youtube
         spot.thumbnails = handleSpotDTO.thumbnails
-        spot.nfcCode = handleSpotDTO.nfcCode
         
         spotRepo.save(spot)
         logger.info("$ip USER ${user.idx} - PATCH\n$prevSpot\n${Gson().toJson(spot)}")
