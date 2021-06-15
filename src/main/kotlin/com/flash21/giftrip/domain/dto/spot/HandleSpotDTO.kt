@@ -45,8 +45,4 @@ class HandleSpotDTO {
     @Size(min = 1, max = 255)
     val explanation: String = ""
     
-    @NotBlank
-    @Size(min = 1)
-    val nfcCode: String = ""
-    
 }
